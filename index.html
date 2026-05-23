@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leyes del Gas Ideal — Laboratorio Virtual</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚗️</text></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d2e;--card:#22263a;--card2:#1e2235;
+  --border:#2e3354;--border2:#3d4470;
+  --text:#e8eaf6;--sub:#9099c4;--muted:#5a6290;
+  --purple:#7c6dff;--blue:#4a9eff;--pink:#ff6584;
+  --green:#4caf9a;--amber:#f5a623;--red:#ff5252;
+  --radius:14px;--radius-sm:9px;--radius-xs:6px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:16px;line-height:1.65;min-height:100vh}
+
+/* ── Header ── */
+header{background:linear-gradient(160deg,#12152e 0%,#0f1117 100%);border-bottom:1px solid var(--border);padding:2.5rem 1rem 2rem;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 50% -10%,#7c6dff1a 0%,transparent 70%);pointer-events:none}
+.header-pill{display:inline-block;background:#7c6dff22;border:1px solid #7c6dff44;color:#b0a4ff;font-size:.78rem;font-weight:600;padding:.3rem .9rem;border-radius:20px;margin-bottom:1rem;letter-spacing:.04em}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:700;background:linear-gradient(135deg,#a78bfa 0%,#60a5fa 50%,#34d399 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;line-height:1.2}
+.tagline{color:var(--sub);font-size:1rem;max-width:500px;margin:0 auto .85rem;line-height:1.5}
+.badge-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.badge{padding:.28rem .8rem;border-radius:20px;font-size:.75rem;font-weight:500;border:1px solid}
+.badge-purple{background:#7c6dff1a;border-color:#7c6dff44;color:#b0a4ff}
+.badge-blue{background:#4a9eff1a;border-color:#4a9eff44;color:#93c5fd}
+.badge-green{background:#4caf9a1a;border-color:#4caf9a44;color:#6ee7b7}
+.badge-amber{background:#f5a6231a;border-color:#f5a62344;color:#fcd34d}
+
+/* ── Nav ── */
+nav{display:flex;gap:6px;padding:1rem;max-width:960px;margin:0 auto;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:120px;padding:.65rem .75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;font-size:.82rem;text-align:center;transition:all .25s;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.tab-btn:hover{border-color:var(--border2);color:var(--text);background:var(--card2)}
+.tab-btn.active{color:#fff;border-color:transparent}
+.tab-btn.t-boyle.active{background:linear-gradient(135deg,#4c1d95,#7c6dff)}
+.tab-btn.t-charles.active{background:linear-gradient(135deg,#9d174d,#ff6584)}
+.tab-btn.t-gay.active{background:linear-gradient(135deg,#064e3b,#4caf9a)}
+.tab-btn.t-combined.active{background:linear-gradient(135deg,#78350f,#f5a623)}
+.tab-btn.t-game.active{background:linear-gradient(135deg,#1a3a5e,#22c55e)}
+.tab-btn.t-quiz.active{background:linear-gradient(135deg,#1e3a5f,#4a9eff)}
+
+/* ── Main ── */
+main{max-width:960px;margin:0 auto;padding:0 1rem 4rem}
+.panel{display:none}.panel.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── Section title ── */
+.section-intro{margin-bottom:1.5rem}
+.section-intro h2{font-size:1.4rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;gap:.6rem}
+.section-intro .desc{color:var(--sub);font-size:.95rem;line-height:1.6;max-width:700px}
+.law-tag{display:inline-block;font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;vertical-align:middle;margin-left:.3rem}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-size:1rem;font-weight:700;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;color:var(--text)}
+.card-title .icon{font-size:1.3rem}
+
+/* ── Concept explanation box ── */
+.concept-box{background:var(--surface);border-left:3px solid;border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.concept-box .concept-title{font-size:.8rem;font-weight:700;letter-spacing:.06em;margin-bottom:.5rem;text-transform:uppercase}
+.concept-box p{font-size:.9rem;color:var(--sub);line-height:1.65;margin-bottom:.5rem}
+.concept-box p:last-child{margin-bottom:0}
+.concept-box strong{font-weight:600}
+
+/* ── Formula ── */
+.formula-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.formula-main{font-size:1.8rem;font-family:Georgia,serif;letter-spacing:.06em;color:var(--text);flex-shrink:0}
+.formula-parts{flex:1;min-width:200px}
+.formula-parts .fp-row{display:flex;align-items:flex-start;gap:.5rem;font-size:.83rem;color:var(--sub);margin-bottom:.3rem;line-height:1.4}
+.formula-parts .fp-row strong{color:var(--text);font-weight:600;min-width:28px;flex-shrink:0}
+
+/* ── Step-by-step guide ── */
+.steps{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem}
+.step{display:flex;align-items:flex-start;gap:.85rem;background:var(--surface);border-radius:var(--radius-sm);padding:.85rem 1rem;border:1px solid var(--border)}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+.step-body{flex:1}
+.step-body strong{font-size:.88rem;font-weight:700;display:block;margin-bottom:.2rem;color:var(--text)}
+.step-body p{font-size:.83rem;color:var(--sub);line-height:1.5;margin:0}
+.step-body code{font-family:monospace;font-size:.85rem;background:#ffffff0f;padding:.1rem .35rem;border-radius:4px;color:var(--text)}
+
+/* ── Interactive area ── */
+.interactive-label{font-size:.78rem;font-weight:700;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem}
+.interactive-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Controls ── */
+.controls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.85rem;margin-bottom:1rem}
+.ctrl{background:var(--surface);border-radius:var(--radius-sm);padding:.9rem;border:1px solid var(--border)}
+.ctrl-label{font-size:.77rem;color:var(--sub);margin-bottom:.35rem;font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.ctrl-what{font-size:.72rem;color:var(--muted);font-style:italic}
+.ctrl input[type=range]{width:100%;accent-color:var(--purple);margin:.25rem 0;cursor:pointer}
+.ctrl-val{font-size:1.2rem;font-weight:700;text-align:center;margin-top:.2rem}
+.ctrl-val-sub{font-size:.73rem;color:var(--muted);text-align:center;margin-top:.15rem}
+
+.ctrl-result{background:var(--surface);border-radius:var(--radius-sm);padding:.9rem;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ctrl-result-label{font-size:.77rem;color:var(--sub);margin-bottom:.2rem}
+.ctrl-result-val{font-size:2rem;font-weight:700;line-height:1}
+.ctrl-result-sub{font-size:.73rem;color:var(--muted);margin-top:.25rem}
+
+/* ── What's happening explanation ── */
+.happening{border-radius:var(--radius-sm);padding:1rem 1.1rem;border:1px solid;margin:.85rem 0;font-size:.88rem;line-height:1.65}
+.happening-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;opacity:.8}
+
+/* ── Verify band ── */
+.verify{border-radius:var(--radius-sm);padding:.75rem 1rem;text-align:center;border:1px solid;margin:.85rem 0}
+.verify-label{font-size:.75rem;color:var(--sub);margin-bottom:.2rem}
+.verify-val{font-size:1rem;font-weight:700}
+
+/* ── Canvas ── */
+.canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin:.85rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.canvas-caption{font-size:.77rem;color:var(--muted);text-align:center;padding:.5rem;border-top:1px solid var(--border)}
+
+/* ── Real world examples ── */
+.examples-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.85rem}
+.ex-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;transition:border-color .2s}
+.ex-card:hover{border-color:var(--border2)}
+.ex-icon{font-size:2rem;margin-bottom:.5rem}
+.ex-title{font-size:.9rem;font-weight:700;margin-bottom:.3rem;color:var(--text)}
+.ex-text{font-size:.82rem;color:var(--sub);line-height:1.5;margin-bottom:.5rem}
+.ex-why{font-size:.78rem;padding:.25rem .6rem;border-radius:20px;display:inline-block;font-weight:600}
+
+/* ── Memory tip ── */
+.memory-tip{background:var(--surface);border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:.85rem 1rem;margin:.85rem 0;font-size:.85rem;color:var(--sub);line-height:1.5}
+.memory-tip strong{color:var(--text)}
+
+/* ── Combined layout ── */
+.combined-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:580px){.combined-grid{grid-template-columns:1fr}}
+.state-box{border-radius:var(--radius-sm);padding:1rem;border:1px solid}
+.state-box h3{font-size:.78rem;font-weight:700;letter-spacing:.07em;margin-bottom:.85rem;opacity:.75}
+.inline-ctrl{margin-bottom:.75rem}
+.inline-ctrl label{font-size:.77rem;color:var(--sub);display:block;margin-bottom:.25rem}
+.inline-ctrl input[type=range]{width:100%;accent-color:var(--purple)}
+.inline-ctrl .val{font-size:1rem;font-weight:700;text-align:center;margin-top:.15rem}
+.result-highlight{text-align:center;padding:.85rem;border-radius:var(--radius-sm);border:1px solid;margin-top:.85rem}
+
+/* ── Step-by-step solution ── */
+.solution{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.1rem;font-size:.87rem;line-height:2;font-family:monospace;color:var(--sub)}
+.solution .s-label{font-family:-apple-system,system-ui,sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.06em;color:var(--muted);margin-bottom:.5rem}
+.solution .highlight{color:var(--amber);font-weight:700}
+
+/* ── Law comparison table ── */
+.comparison{width:100%;border-collapse:collapse;font-size:.85rem}
+.comparison th{background:var(--surface);padding:.65rem .85rem;text-align:left;font-weight:600;color:var(--sub);border-bottom:1px solid var(--border);font-size:.78rem;letter-spacing:.04em}
+.comparison td{padding:.65rem .85rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.comparison tr:last-child td{border-bottom:none}
+.comparison tr:hover td{background:#ffffff04}
+
+/* ── Game selector cards ── */
+.game-select-card{
+  background:var(--card);border:2px solid var(--border);border-radius:var(--radius);
+  padding:1.4rem;cursor:pointer;transition:all .25s;
+  display:flex;flex-direction:column;gap:.4rem;
+}
+.game-select-card:hover{border-color:var(--gc,var(--purple));background:var(--card2);transform:translateY(-2px)}
+.gsc-icon{font-size:2rem;line-height:1}
+.gsc-name{font-size:1rem;font-weight:700;color:var(--text)}
+.gsc-vars{font-size:.75rem;color:var(--sub);font-weight:500}
+.gsc-formula{font-size:1rem;font-family:Georgia,serif;color:var(--gcl,#b0a4ff);margin:.15rem 0}
+.gsc-desc{font-size:.82rem;color:var(--sub);line-height:1.45;flex:1}
+.gsc-btn{margin-top:.5rem;font-size:.82rem;font-weight:700;color:var(--gcl,#b0a4ff);opacity:.8}
+.game-select-card:hover .gsc-btn{opacity:1}
+
+/* ── Game option cards ── */
+.g-opt-btn{
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:var(--radius-sm);padding:1rem;text-align:center;
+  cursor:pointer;transition:all .2s;
+}
+.g-opt-btn:hover{border-color:var(--gc,var(--purple));background:var(--card2)}
+.g-opt-btn.correct{background:#4caf9a18 !important;border-color:#4caf9a !important}
+.g-opt-btn.wrong{background:#ff525218 !important;border-color:#ff5252 !important}
+.g-opt-btn.disabled{cursor:default;pointer-events:none}
+
+text-align:center;padding:2.5rem 1rem}
+.quiz-start h2{font-size:1.4rem;margin-bottom:.5rem}
+.quiz-start p{color:var(--sub);font-size:.92rem;max-width:440px;margin:0 auto 1.5rem;line-height:1.6}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:var(--radius-sm);border:1px solid;cursor:pointer;font-size:.92rem;font-weight:600;transition:all .2s;text-decoration:none;letter-spacing:.01em}
+.btn-primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-secondary{background:transparent;border-color:var(--border2);color:var(--text)}
+.btn-secondary:hover{background:var(--card2)}
+.progress-wrap{background:var(--surface);border-radius:20px;height:6px;overflow:hidden;margin:.85rem 0}
+.progress-bar{height:100%;border-radius:20px;transition:width .4s ease;background:linear-gradient(90deg,var(--purple),var(--blue))}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.q-meta{font-size:.78rem;color:var(--sub);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.q-law-tag{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:20px}
+.q-text{font-size:1.05rem;font-weight:500;margin-bottom:1.25rem;line-height:1.55;color:var(--text)}
+.q-opts{display:flex;flex-direction:column;gap:.5rem}
+.q-opt{padding:.75rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:.9rem;transition:all .2s;display:flex;align-items:center;gap:.65rem;color:var(--text)}
+.q-opt:hover{border-color:var(--border2);background:var(--card2)}
+.q-opt.correct{background:#4caf9a18;border-color:#4caf9a;color:#6ee7b7}
+.q-opt.wrong{background:#ff525218;border-color:#ff5252;color:#fca5a5}
+.q-opt.disabled{cursor:default;pointer-events:none}
+.q-key{width:26px;height:26px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.q-feedback{margin-top:.85rem;padding:.9rem 1rem;border-radius:var(--radius-sm);font-size:.88rem;border-left:3px solid;display:none;line-height:1.6}
+.q-feedback.show{display:block}
+.q-actions{display:flex;justify-content:flex-end;margin-top:1rem}
+.score-card{text-align:center;padding:2.5rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.score-emoji{font-size:3.5rem;margin-bottom:.5rem}
+.score-num{font-size:3.5rem;font-weight:700;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Responsive ── */
+@media(max-width:620px){.controls-grid{grid-template-columns:1fr 1fr}.formula-card{flex-direction:column}.formula-main{font-size:1.5rem}.tab-btn{font-size:.75rem;padding:.5rem .4rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-pill">⚗️ Laboratorio Virtual Interactivo · Química 5to Año</div>
+  <h1>Leyes del Gas Ideal</h1>
+  <p class="tagline">Aprende cómo se comportan los gases cuando cambia la presión, el volumen o la temperatura. ¡Experimenta, juega y descubre!</p>
+  <div style="margin-top:.6rem;margin-bottom:.2rem">
+    <span style="display:inline-flex;align-items:center;gap:.4rem;background:#ffffff0a;border:1px solid #ffffff18;border-radius:20px;padding:.3rem .85rem;font-size:.82rem;color:var(--sub)">
+      👩🏾‍🏫 Maestra: <strong style="color:var(--text)">Scarleh Peralta</strong>
+    </span>
+  </div>
+  <div class="badge-row">
+    <span class="badge badge-purple">📦 Boyle</span>
+    <span class="badge badge-blue">🌡️ Charles</span>
+    <span class="badge badge-green">🔥 Gay-Lussac</span>
+    <span class="badge badge-amber">⚡ Ley Combinada</span>
+    <span class="badge badge-blue">🎮 Juegos de Leyes del Gas</span>
+    <span class="badge badge-blue">🧠 Quiz</span>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn t-boyle active" onclick="goTab('boyle')">📦 Ley de Boyle</button>
+  <button class="tab-btn t-charles" onclick="goTab('charles')">🌡️ Ley de Charles</button>
+  <button class="tab-btn t-gay" onclick="goTab('gay')">🔥 Gay-Lussac</button>
+  <button class="tab-btn t-combined" onclick="goTab('combined')">⚡ Ley Combinada</button>
+  <button class="tab-btn t-game" onclick="goTab('game')">🎮 Juegos de Leyes del Gas</button>
+  <button class="tab-btn t-quiz" onclick="goTab('quiz')">🧠 Quiz</button>
+</nav>
+
+<main>
+
+<!-- ══════════════ BOYLE ══════════════ -->
+<div id="panel-boyle" class="panel active">
+
+  <div class="section-intro">
+    <h2>📦 Ley de Boyle <span class="law-tag badge-purple" style="font-size:.72rem;padding:.2rem .6rem;border-radius:20px;background:#7c6dff1a;border:1px solid #7c6dff44;color:#b0a4ff">Temperatura constante</span></h2>
+    <p class="desc">Descubierta por Robert Boyle en 1662. Explica qué pasa con el volumen de un gas cuando cambias su presión — siempre que la temperatura no cambie.</p>
+  </div>
+
+  <div class="concept-box" style="border-color:var(--purple)">
+    <div class="concept-title" style="color:#b0a4ff">💡 ¿Qué dice esta ley?</div>
+    <p>Imagina que tienes un globo sellado. Si lo <strong>aprietas</strong> (aumentas la presión), el globo se <strong>achica</strong> (el volumen disminuye). Si lo <strong>sueltas</strong>, vuelve a expandirse. Esa relación entre presión y volumen es siempre <strong>inversa</strong>: cuando uno sube, el otro baja.</p>
+    <p>La razón molecular: al reducir el espacio disponible, las moléculas chocan más seguido contra las paredes → mayor presión. Si amplías el espacio, los choques se espacian → menor presión.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-main" style="color:var(--purple)">P₁ · V₁ = P₂ · V₂</div>
+    <div class="formula-parts">
+      <div class="fp-row"><strong>P₁</strong> Presión inicial (en atmósferas, atm)</div>
+      <div class="fp-row"><strong>V₁</strong> Volumen inicial (en litros, L)</div>
+      <div class="fp-row"><strong>P₂</strong> Nueva presión que le aplicas</div>
+      <div class="fp-row"><strong>V₂</strong> Nuevo volumen resultante (lo que buscas)</div>
+      <div class="fp-row" style="margin-top:.4rem;color:var(--muted)">👉 El producto P·V siempre da el mismo número mientras T no cambie</div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:#7c6dff22;color:#b0a4ff">1</div>
+      <div class="step-body">
+        <strong>Identifica los datos</strong>
+        <p>Anota P₁, V₁ (estado inicial) y P₂ (la nueva presión). El incógnito es V₂.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#7c6dff22;color:#b0a4ff">2</div>
+      <div class="step-body">
+        <strong>Despeja V₂</strong>
+        <p>De la fórmula: <code>V₂ = (P₁ × V₁) / P₂</code> — multiplica los conocidos y divide por la nueva presión.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#7c6dff22;color:#b0a4ff">3</div>
+      <div class="step-body">
+        <strong>Verifica el resultado</strong>
+        <p>Comprueba que <code>P₁ × V₁</code> sea igual a <code>P₂ × V₂</code>. Si son iguales, el cálculo está bien.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="interactive-label">🎮 Experimenta tú mismo</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:1rem">Cambia la presión inicial, el volumen y la nueva presión. Observa cómo se calcula V₂ automáticamente y lee la explicación debajo.</p>
+    <div class="controls-grid">
+      <div class="ctrl">
+        <div class="ctrl-label">Presión inicial P₁ <span class="ctrl-what">¿qué es?</span></div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">La fuerza que ejerce el gas sobre las paredes. 1 atm = presión normal al nivel del mar.</p>
+        <input type="range" min="0.5" max="5" step="0.1" value="1" id="b-p1" oninput="calcBoyle()">
+        <div class="ctrl-val" id="b-p1-v" style="color:var(--purple)">1.0 atm</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Volumen inicial V₁ <span class="ctrl-what">¿qué es?</span></div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">El espacio que ocupa el gas. Imagina el interior de una jeringa o un pistón.</p>
+        <input type="range" min="1" max="20" step="0.5" value="10" id="b-v1" oninput="calcBoyle()">
+        <div class="ctrl-val" id="b-v1-v" style="color:var(--purple)">10.0 L</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Nueva presión P₂ <span class="ctrl-what">la que aplicas</span></div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">La presión que le aplicarás al gas. Sube para comprimir, baja para expandir.</p>
+        <input type="range" min="0.5" max="10" step="0.1" value="2" id="b-p2" oninput="calcBoyle()">
+        <div class="ctrl-val" id="b-p2-v" style="color:var(--blue)">2.0 atm</div>
+      </div>
+      <div class="ctrl-result">
+        <div class="ctrl-result-label">Nuevo volumen V₂</div>
+        <div class="ctrl-result-val" id="b-v2-v" style="color:var(--blue)">5.0 L</div>
+        <div class="ctrl-result-sub" id="b-v2-hint">resultado calculado</div>
+      </div>
+    </div>
+    <div class="verify" id="b-verify" style="background:#7c6dff12;border-color:#7c6dff44">
+      <div class="verify-label">Comprobación: P₁·V₁ debe ser igual a P₂·V₂</div>
+      <div class="verify-val" id="b-rv" style="color:var(--purple)">✓ 10.0 = 10.0</div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="cv-boyle" style="height:130px"></canvas>
+      <div class="canvas-caption" id="b-canvas-cap">El rectángulo izquierdo es V₁, el derecho es V₂. Los puntos son moléculas.</div>
+    </div>
+    <div class="happening" id="b-happening" style="background:#7c6dff0f;border-color:#7c6dff44;color:var(--sub)">
+      <div class="happening-title" style="color:#b0a4ff">🔬 Lo que está pasando</div>
+      Al duplicar la presión, el volumen se reduce a la mitad. Las moléculas tienen menos espacio y chocan más contra las paredes.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📈</span> Gráfica P-V: La hipérbola de Boyle</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:.85rem">Esta curva se llama <strong>hipérbola</strong>. Cada punto de la curva representa el mismo gas a diferente presión/volumen — pero siempre con el mismo P·V. El punto rojo es el estado inicial que elegiste.</p>
+    <div class="canvas-wrap">
+      <canvas id="cv-boyle-graph" style="height:200px"></canvas>
+      <div class="canvas-caption">Curva de Boyle: cuando P sube, V baja. El producto P×V (área del rectángulo) es siempre constante.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🌍</span> Ejemplos en la vida real</div>
+    <div class="examples-grid">
+      <div class="ex-card">
+        <div class="ex-icon">💉</div>
+        <div class="ex-title">Jeringa médica</div>
+        <div class="ex-text">Al jalar el émbolo, el volumen aumenta → la presión interna cae → el líquido sube por la aguja hacia la zona de mayor presión.</div>
+        <span class="ex-why" style="background:#7c6dff15;color:#b0a4ff">P↓ → V↑</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🤿</div>
+        <div class="ex-title">Buceo en el mar</div>
+        <div class="ex-text">A mayor profundidad, la presión del agua aumenta → el volumen de aire en los pulmones se comprime. Por eso los buzos no pueden subir rápido.</div>
+        <span class="ex-why" style="background:#7c6dff15;color:#b0a4ff">P↑ → V↓</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🎈</div>
+        <div class="ex-title">Globo a gran altitud</div>
+        <div class="ex-text">En altura, la presión atmosférica baja → el gas del globo se expande → el globo crece hasta que puede explotar.</div>
+        <span class="ex-why" style="background:#7c6dff15;color:#b0a4ff">P↓ → V↑</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="memory-tip">
+    <strong>🧠 Truco para recordarlo:</strong> Piensa en Boyle como una <em>balanza inversa</em>: cuando un lado sube (P), el otro baja (V). La "constante" es el <strong>producto P×V</strong>. Si P se triplica, V se reduce a un tercio.
+  </div>
+</div>
+
+<!-- ══════════════ CHARLES ══════════════ -->
+<div id="panel-charles" class="panel">
+
+  <div class="section-intro">
+    <h2>🌡️ Ley de Charles <span class="law-tag" style="background:#ff65841a;border:1px solid #ff658444;color:#fda4af;font-size:.72rem;padding:.2rem .6rem;border-radius:20px">Presión constante</span></h2>
+    <p class="desc">Formulada por Jacques Charles (1787) y Gay-Lussac (1802). Explica por qué los globos se inflan cuando los calientas y se encogen en el frío.</p>
+  </div>
+
+  <div class="concept-box" style="border-color:var(--pink)">
+    <div class="concept-title" style="color:#fda4af">💡 ¿Qué dice esta ley?</div>
+    <p>Al <strong>calentar</strong> un gas (a presión constante), las moléculas se mueven <strong>más rápido</strong> y necesitan <strong>más espacio</strong> para no aumentar los choques → el volumen crece. Al <strong>enfriarlo</strong>, se mueven más lento → el volumen se reduce.</p>
+    <p>Importante: esta ley usa temperatura en <strong>Kelvin</strong>, no en Celsius. ¿Por qué? Porque 0°C no es "sin temperatura" — las moléculas siguen moviéndose. El cero absoluto real es 0 K = −273°C, donde el movimiento molecular se detiene.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-main" style="color:var(--pink)">V₁ / T₁ = V₂ / T₂</div>
+    <div class="formula-parts">
+      <div class="fp-row"><strong>V₁</strong> Volumen inicial del gas (litros)</div>
+      <div class="fp-row"><strong>T₁</strong> Temperatura inicial en <em>Kelvin</em> (K = °C + 273)</div>
+      <div class="fp-row"><strong>T₂</strong> Nueva temperatura en Kelvin</div>
+      <div class="fp-row"><strong>V₂</strong> Nuevo volumen = <code>(V₁ × T₂) / T₁</code></div>
+      <div class="fp-row" style="margin-top:.4rem;color:var(--muted)">👉 La razón V/T es siempre la misma mientras P no cambie</div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#ff658408;border-color:#ff658433">
+    <div class="card-title" style="color:#fda4af">⚠️ Conversión obligatoria: °C → Kelvin</div>
+    <p style="font-size:.88rem;color:var(--sub);margin-bottom:.85rem">Antes de usar cualquier fórmula de gases, convierte siempre la temperatura a Kelvin. Usar °C dará resultados incorrectos.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem">
+      <div style="background:var(--surface);border-radius:8px;padding:.85rem;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.78rem;color:var(--sub)">Fórmula</div>
+        <div style="font-size:1.2rem;font-weight:700;margin:.3rem 0;font-family:Georgia">K = °C + 273</div>
+      </div>
+      <div style="background:var(--surface);border-radius:8px;padding:.85rem;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.78rem;color:var(--sub)">Ejemplo</div>
+        <div style="font-size:1rem;font-weight:600;margin:.3rem 0">25°C = 298 K</div>
+      </div>
+      <div style="background:var(--surface);border-radius:8px;padding:.85rem;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.78rem;color:var(--sub)">Cero absoluto</div>
+        <div style="font-size:1rem;font-weight:600;margin:.3rem 0">−273°C = 0 K</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="interactive-label">🎮 Experimenta tú mismo</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:1rem">Los sliders de temperatura muestran Kelvin y Celsius al mismo tiempo. Observa cómo el volumen cambia proporcionalmente con la temperatura.</p>
+    <div class="controls-grid">
+      <div class="ctrl">
+        <div class="ctrl-label">Volumen inicial V₁</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">Volumen de partida del gas, antes de calentar o enfriar.</p>
+        <input type="range" min="1" max="20" step="0.5" value="5" id="c-v1" oninput="calcCharles()">
+        <div class="ctrl-val" id="c-v1-v" style="color:var(--pink)">5.0 L</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Temperatura inicial T₁</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">Temperatura de partida. Siempre en Kelvin para los cálculos.</p>
+        <input type="range" min="50" max="600" step="5" value="273" id="c-t1" oninput="calcCharles()">
+        <div class="ctrl-val" id="c-t1-v" style="color:var(--pink)">273 K</div>
+        <div class="ctrl-val-sub" id="c-t1-c">= 0°C</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Nueva temperatura T₂</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">La temperatura que le aplicas. Sube para calentar, baja para enfriar.</p>
+        <input type="range" min="50" max="600" step="5" value="546" id="c-t2" oninput="calcCharles()">
+        <div class="ctrl-val" id="c-t2-v" style="color:var(--blue)">546 K</div>
+        <div class="ctrl-val-sub" id="c-t2-c">= 273°C</div>
+      </div>
+      <div class="ctrl-result">
+        <div class="ctrl-result-label">Nuevo volumen V₂</div>
+        <div class="ctrl-result-val" id="c-v2-v" style="color:var(--blue)">10.0 L</div>
+        <div class="ctrl-result-sub" id="c-v2-hint">resultado calculado</div>
+      </div>
+    </div>
+    <div class="verify" style="background:#ff658412;border-color:#ff658444">
+      <div class="verify-label">Comprobación: V₁/T₁ debe ser igual a V₂/T₂</div>
+      <div class="verify-val" id="c-rv" style="color:var(--pink)">✓ 0.01832 = 0.01832</div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="cv-charles" style="height:130px"></canvas>
+      <div class="canvas-caption" id="c-canvas-cap">Los contenedores muestran el volumen relativo. Más temperatura = moléculas más activas = más espacio.</div>
+    </div>
+    <div class="happening" id="c-happening" style="background:#ff65840f;border-color:#ff658444;color:var(--sub)">
+      <div class="happening-title" style="color:#fda4af">🔬 Lo que está pasando</div>
+      Al duplicar la temperatura (en Kelvin), el volumen también se duplica.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🌍</span> Ejemplos en la vida real</div>
+    <div class="examples-grid">
+      <div class="ex-card">
+        <div class="ex-icon">🎈</div>
+        <div class="ex-title">Globo aerostático</div>
+        <div class="ex-text">El quemador calienta el aire dentro del globo → el aire se expande → el globo se infla y sube porque el aire caliente es menos denso.</div>
+        <span class="ex-why" style="background:#ff658415;color:#fda4af">T↑ → V↑</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🏀</div>
+        <div class="ex-title">Pelota en el frío</div>
+        <div class="ex-text">Una pelota de básquet bien inflada parece desinflarse en días fríos. El aire adentro se contrae al bajar la temperatura.</div>
+        <span class="ex-why" style="background:#ff658415;color:#fda4af">T↓ → V↓</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🍞</div>
+        <div class="ex-title">Pan en el horno</div>
+        <div class="ex-text">El CO₂ dentro de la masa sube de temperatura → se expande → el pan crece. La misma ley, ¡en tu cocina!</div>
+        <span class="ex-why" style="background:#ff658415;color:#fda4af">T↑ → V↑</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="memory-tip">
+    <strong>🧠 Truco para recordarlo:</strong> Charles es la ley del <em>calor directo</em>: temperatura y volumen van <strong>juntos en la misma dirección</strong>. Si T sube 20%, V también sube 20%. La clave es usar <strong>Kelvin</strong> — nunca Celsius.
+  </div>
+</div>
+
+<!-- ══════════════ GAY-LUSSAC ══════════════ -->
+<div id="panel-gay" class="panel">
+
+  <div class="section-intro">
+    <h2>🔥 Ley de Gay-Lussac <span class="law-tag" style="background:#4caf9a1a;border:1px solid #4caf9a44;color:#6ee7b7;font-size:.72rem;padding:.2rem .6rem;border-radius:20px">Volumen constante</span></h2>
+    <p class="desc">Formulada por Joseph Louis Gay-Lussac (1809). Aplica cuando el gas está en un <strong>recipiente rígido</strong> — como una lata, un cilindro de gas o los neumáticos de un auto.</p>
+  </div>
+
+  <div class="concept-box" style="border-color:var(--green)">
+    <div class="concept-title" style="color:#6ee7b7">💡 ¿Qué dice esta ley?</div>
+    <p>Si el gas no puede expandirse (volumen fijo), al calentarlo las moléculas se mueven más rápido y <strong>golpean más fuerte las paredes</strong> → la presión sube. Al enfriarlo, los choques son más débiles → la presión baja.</p>
+    <p><strong>Ejemplo de peligro real:</strong> Nunca expongas una lata de aerosol al fuego. El gas adentro no puede expandirse (lata rígida), la presión sube sin límite hasta que la lata explota.</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-main" style="color:var(--green)">P₁ / T₁ = P₂ / T₂</div>
+    <div class="formula-parts">
+      <div class="fp-row"><strong>P₁</strong> Presión inicial del gas en el recipiente</div>
+      <div class="fp-row"><strong>T₁</strong> Temperatura inicial en Kelvin</div>
+      <div class="fp-row"><strong>T₂</strong> Nueva temperatura en Kelvin</div>
+      <div class="fp-row"><strong>P₂</strong> Nueva presión = <code>(P₁ × T₂) / T₁</code></div>
+      <div class="fp-row" style="margin-top:.4rem;color:var(--muted)">👉 La razón P/T es siempre la misma mientras V no cambie</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="interactive-label">🎮 Experimenta tú mismo</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:1rem">Varía la temperatura del recipiente y observa cómo cambia la presión. El volumen no varía porque el contenedor es rígido.</p>
+    <div class="controls-grid">
+      <div class="ctrl">
+        <div class="ctrl-label">Presión inicial P₁</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">Presión del gas en el recipiente rígido al inicio.</p>
+        <input type="range" min="0.5" max="5" step="0.1" value="1" id="g-p1" oninput="calcGay()">
+        <div class="ctrl-val" id="g-p1-v" style="color:var(--green)">1.0 atm</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Temperatura inicial T₁</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">Temperatura de partida del gas.</p>
+        <input type="range" min="50" max="600" step="5" value="300" id="g-t1" oninput="calcGay()">
+        <div class="ctrl-val" id="g-t1-v" style="color:var(--green)">300 K</div>
+        <div class="ctrl-val-sub" id="g-t1-c">= 27°C</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Nueva temperatura T₂</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">La temperatura que alcanza el gas. Sube para simular calentamiento.</p>
+        <input type="range" min="50" max="600" step="5" value="600" id="g-t2" oninput="calcGay()">
+        <div class="ctrl-val" id="g-t2-v" style="color:var(--blue)">600 K</div>
+        <div class="ctrl-val-sub" id="g-t2-c">= 327°C</div>
+      </div>
+      <div class="ctrl-result">
+        <div class="ctrl-result-label">Nueva presión P₂</div>
+        <div class="ctrl-result-val" id="g-p2-v" style="color:var(--blue)">2.0 atm</div>
+        <div class="ctrl-result-sub" id="g-p2-hint">resultado calculado</div>
+      </div>
+    </div>
+    <div class="verify" style="background:#4caf9a12;border-color:#4caf9a44">
+      <div class="verify-label">Comprobación: P₁/T₁ debe ser igual a P₂/T₂</div>
+      <div class="verify-val" id="g-rv" style="color:var(--green)">✓ 0.003333 = 0.003333</div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="cv-gay" style="height:130px"></canvas>
+      <div class="canvas-caption" id="g-canvas-cap">El recipiente no cambia de tamaño. Los puntos representan moléculas — a mayor temperatura, más velocidad y más choques.</div>
+    </div>
+    <div class="happening" id="g-happening" style="background:#4caf9a0f;border-color:#4caf9a44;color:var(--sub)">
+      <div class="happening-title" style="color:#6ee7b7">🔬 Lo que está pasando</div>
+      En un recipiente que no puede expandirse, al subir T las moléculas chocan con más fuerza → P sube.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚠️</span> Por qué es importante en la vida real</div>
+    <div class="examples-grid">
+      <div class="ex-card">
+        <div class="ex-icon">🚗</div>
+        <div class="ex-title">Neumáticos en verano</div>
+        <div class="ex-text">El volumen del neumático es casi fijo. En días calurosos, T sube → P sube. Por eso se recomienda inflar menos en verano o revisar la presión en frío.</div>
+        <span class="ex-why" style="background:#4caf9a15;color:#6ee7b7">T↑ → P↑</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🥫</div>
+        <div class="ex-title">Aerosol al fuego ☠️</div>
+        <div class="ex-text">La lata es rígida → V constante. Al calentarse, la presión interna puede superar el límite de resistencia de la lata. Resultado: explosión.</div>
+        <span class="ex-why" style="background:#ff525215;color:#fca5a5">⚠️ PELIGROSO</span>
+      </div>
+      <div class="ex-card">
+        <div class="ex-icon">🍳</div>
+        <div class="ex-title">Olla a presión</div>
+        <div class="ex-text">La válvula de seguridad libera vapor cuando P supera cierto límite. Sin ella, la olla funcionaría como una "bomba" de Gay-Lussac.</div>
+        <span class="ex-why" style="background:#4caf9a15;color:#6ee7b7">T↑ → P↑</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="memory-tip">
+    <strong>🧠 Truco para recordarlo:</strong> Gay-Lussac aplica cuando el recipiente es <em>rígido</em> (no puede deformarse). Si T sube, P sube en la misma proporción. Piensa: <strong>"lata cerrada + fuego = peligro"</strong>.
+  </div>
+</div>
+
+<!-- ══════════════ COMBINED ══════════════ -->
+<div id="panel-combined" class="panel">
+
+  <div class="section-intro">
+    <h2>⚡ Ley Combinada de los Gases <span class="law-tag" style="background:#f5a6231a;border:1px solid #f5a62344;color:#fcd34d;font-size:.72rem;padding:.2rem .6rem;border-radius:20px">Las 3 leyes en 1</span></h2>
+    <p class="desc">Cuando las tres variables cambian al mismo tiempo — presión, volumen y temperatura — ninguna de las leyes individuales alcanza. La Ley Combinada las reúne todas en una sola ecuación.</p>
+  </div>
+
+  <div class="concept-box" style="border-color:var(--amber)">
+    <div class="concept-title" style="color:#fcd34d">💡 ¿Cuándo se usa?</div>
+    <p>Se usa cuando tienes un gas en dos estados diferentes y <strong>las tres variables (P, V y T) cambian</strong> entre el estado 1 y el estado 2. Por ejemplo: un cilindro de gas que se calienta y además se comprime.</p>
+    <p>Si solo <strong>dos</strong> variables cambian (la tercera es constante), puedes usar la ley individual más simple: Boyle (T=cte), Charles (P=cte) o Gay-Lussac (V=cte).</p>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-main" style="color:var(--amber)">(P₁V₁)/T₁ = (P₂V₂)/T₂</div>
+    <div class="formula-parts">
+      <div class="fp-row"><strong>P₁,V₁,T₁</strong> Estado inicial (lo que conoces)</div>
+      <div class="fp-row"><strong>P₂,T₂</strong> Nuevas condiciones que aplicas</div>
+      <div class="fp-row"><strong>V₂</strong> Lo que calculas: <code>V₂ = (P₁·V₁·T₂)/(T₁·P₂)</code></div>
+      <div class="fp-row" style="margin-top:.4rem;color:var(--muted)">👉 También puedes despejar P₂ o T₂ si son los incógnitos</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.25rem">
+    <div class="card-title">📋 Relación con las otras leyes</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:.85rem">La Ley Combinada incluye a todas las demás. Si fijas una variable, obtienes la ley más simple:</p>
+    <div style="overflow-x:auto">
+    <table class="comparison">
+      <thead><tr><th>Si mantienes fija...</th><th>Se cancela...</th><th>Y obtienes...</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#b0a4ff">Temperatura (T₁=T₂)</td><td>T del numerador y denominador</td><td style="color:#b0a4ff">P₁V₁ = P₂V₂ → Ley de Boyle</td><td>Comprimir una jeringa</td></tr>
+        <tr><td style="color:#fda4af">Presión (P₁=P₂)</td><td>P de ambos lados</td><td style="color:#fda4af">V₁/T₁ = V₂/T₂ → Ley de Charles</td><td>Globo aerostático</td></tr>
+        <tr><td style="color:#6ee7b7">Volumen (V₁=V₂)</td><td>V de ambos lados</td><td style="color:#6ee7b7">P₁/T₁ = P₂/T₂ → Ley de Gay-Lussac</td><td>Neumático en el calor</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="interactive-label">🎮 Experimenta con los dos estados</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:1rem">Ajusta los valores del estado inicial y las nuevas condiciones. El nuevo volumen V₂ se calcula automáticamente y se muestra la solución paso a paso.</p>
+    <div class="combined-grid">
+      <div class="state-box" style="background:#7c6dff0a;border-color:#7c6dff44">
+        <h3 style="color:#b0a4ff">ESTADO INICIAL →</h3>
+        <div class="inline-ctrl">
+          <label>Presión P₁ (atm)</label>
+          <input type="range" min="0.5" max="5" step="0.1" value="1" id="cb-p1" oninput="calcCombined()">
+          <div class="val" id="cb-p1-v" style="color:#b0a4ff;font-size:1rem;font-weight:700;text-align:center;margin-top:.2rem">1.0 atm</div>
+        </div>
+        <div class="inline-ctrl">
+          <label>Volumen V₁ (L)</label>
+          <input type="range" min="1" max="20" step="0.5" value="10" id="cb-v1" oninput="calcCombined()">
+          <div class="val" id="cb-v1-v" style="color:#b0a4ff;font-size:1rem;font-weight:700;text-align:center;margin-top:.2rem">10.0 L</div>
+        </div>
+        <div class="inline-ctrl">
+          <label>Temperatura T₁ (K)</label>
+          <input type="range" min="50" max="600" step="5" value="300" id="cb-t1" oninput="calcCombined()">
+          <div class="val" id="cb-t1-v" style="color:#b0a4ff;font-size:1rem;font-weight:700;text-align:center;margin-top:.2rem">300 K (27°C)</div>
+        </div>
+      </div>
+      <div class="state-box" style="background:#4a9eff0a;border-color:#4a9eff44">
+        <h3 style="color:#93c5fd">→ ESTADO FINAL</h3>
+        <div class="inline-ctrl">
+          <label>Nueva presión P₂ (atm)</label>
+          <input type="range" min="0.5" max="5" step="0.1" value="2" id="cb-p2" oninput="calcCombined()">
+          <div class="val" id="cb-p2-v" style="color:#93c5fd;font-size:1rem;font-weight:700;text-align:center;margin-top:.2rem">2.0 atm</div>
+        </div>
+        <div class="inline-ctrl">
+          <label>Nueva temperatura T₂ (K)</label>
+          <input type="range" min="50" max="600" step="5" value="400" id="cb-t2" oninput="calcCombined()">
+          <div class="val" id="cb-t2-v" style="color:#93c5fd;font-size:1rem;font-weight:700;text-align:center;margin-top:.2rem">400 K (127°C)</div>
+        </div>
+        <div class="result-highlight" style="background:#f5a62318;border-color:#f5a62344;margin-top:.85rem">
+          <div style="font-size:.78rem;color:var(--sub);margin-bottom:.25rem">Nuevo volumen V₂ =</div>
+          <div id="cb-v2" style="font-size:2.2rem;font-weight:700;color:var(--amber);line-height:1">6.67 L</div>
+          <div style="font-size:.75rem;color:var(--sub);margin-top:.25rem" id="cb-v2-hint">calculado con la ley combinada</div>
+        </div>
+      </div>
+    </div>
+    <div class="verify" style="background:#f5a62312;border-color:#f5a62344;margin-top:.85rem">
+      <div class="verify-label">Comprobación: (P₁·V₁)/T₁ debe ser igual a (P₂·V₂)/T₂</div>
+      <div class="verify-val" id="cb-rv" style="color:var(--amber)">✓ 0.03333 = 0.03333</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📝</span> Solución paso a paso — generada automáticamente</div>
+    <p style="font-size:.87rem;color:var(--sub);margin-bottom:.85rem">Ajusta los sliders y esta sección muestra exactamente cómo se resolvería el problema en un examen:</p>
+    <div class="solution" id="cb-solution">
+      <div class="s-label">SOLUCIÓN</div>
+      Ajusta los valores para ver la solución.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ JUEGOS ══════════════ -->
+<div id="panel-game" class="panel">
+
+  <!-- ── LAW SELECTOR ── -->
+  <div id="game-selector">
+    <div class="section-intro">
+      <h2>🎮 Juegos de Leyes del Gas</h2>
+      <p class="desc">Elige el juego que quieres practicar. En cada uno tienes 5 rondas: se te dan los datos del estado inicial y debes identificar cuál es el estado final correcto. ¡Ganas 100 puntos por cada respuesta acertada!</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem">
+      <div class="game-select-card" onclick="startGameFor('boyle')" style="--gc:#7c6dff;--gcl:#b0a4ff">
+        <div class="gsc-icon">📦</div>
+        <div class="gsc-name">Ley de Boyle</div>
+        <div class="gsc-vars">P y V · T constante</div>
+        <div class="gsc-formula">P₁V₁ = P₂V₂</div>
+        <div class="gsc-desc">Elige los valores correctos de P₂ y V₂ que conserven la constante k.</div>
+        <div class="gsc-btn">Jugar →</div>
+      </div>
+      <div class="game-select-card" onclick="startGameFor('charles')" style="--gc:#ff6584;--gcl:#fda4af">
+        <div class="gsc-icon">🌡️</div>
+        <div class="gsc-name">Ley de Charles</div>
+        <div class="gsc-vars">V y T · P constante</div>
+        <div class="gsc-formula">V₁/T₁ = V₂/T₂</div>
+        <div class="gsc-desc">Dado V₁ y T₁, elige el V₂ correcto al cambiar la temperatura.</div>
+        <div class="gsc-btn">Jugar →</div>
+      </div>
+      <div class="game-select-card" onclick="startGameFor('gay')" style="--gc:#4caf9a;--gcl:#6ee7b7">
+        <div class="gsc-icon">🔥</div>
+        <div class="gsc-name">Gay-Lussac</div>
+        <div class="gsc-vars">P y T · V constante</div>
+        <div class="gsc-formula">P₁/T₁ = P₂/T₂</div>
+        <div class="gsc-desc">Recipiente rígido. Elige la nueva presión al cambiar la temperatura.</div>
+        <div class="gsc-btn">Jugar →</div>
+      </div>
+      <div class="game-select-card" onclick="startGameFor('combined')" style="--gc:#f5a623;--gcl:#fcd34d">
+        <div class="gsc-icon">⚡</div>
+        <div class="gsc-name">Ley Combinada</div>
+        <div class="gsc-vars">P, V y T cambian</div>
+        <div class="gsc-formula">(P₁V₁)/T₁ = (P₂V₂)/T₂</div>
+        <div class="gsc-desc">El desafío final: las tres variables cambian. Encuentra V₂.</div>
+        <div class="gsc-btn">Jugar →</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-size:.85rem;color:var(--sub)">
+      💡 <strong style="color:var(--text)">Consejo:</strong> Si es tu primera vez, empieza con Boyle. Es la base de todas las demás leyes. Recuerda siempre pasar la temperatura a <strong style="color:var(--text)">Kelvin (K = °C + 273)</strong> en Charles y Gay-Lussac.
+    </div>
+  </div>
+
+  <!-- ── ACTIVE GAME ── -->
+  <div id="game-active" style="display:none">
+
+    <!-- Back + law name + controls -->
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="backToSelector()" style="padding:.4rem .85rem;font-size:.82rem" title="Elegir otro juego">← Juegos</button>
+      <button class="btn btn-secondary" id="g-prev-btn" onclick="goToPrev()" style="padding:.4rem .85rem;font-size:.82rem;display:none" title="Ver pregunta anterior">‹ Anterior</button>
+      <div id="g-law-badge" style="font-size:.85rem;font-weight:700;padding:.3rem .85rem;border-radius:20px;background:#7c6dff22;color:#b0a4ff;border:1px solid #7c6dff44;flex:1;text-align:center">📦 Ley de Boyle</div>
+      <button class="btn btn-secondary" id="g-reset-btn" onclick="confirmReset()" style="padding:.4rem .85rem;font-size:.82rem" title="Reiniciar juego desde cero">↺ Reset</button>
+    </div>
+
+    <!-- Review mode banner (shown when reviewing prev round) -->
+    <div id="g-review-banner" style="display:none;background:#f5a62318;border:1px solid #f5a62344;border-radius:var(--radius-sm);padding:.65rem 1rem;margin-bottom:1rem;font-size:.85rem;color:#fcd34d;display:none;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+      <span>👁️ <strong>Modo revisión</strong> — estás viendo una ronda anterior. No puedes cambiar tu respuesta.</span>
+      <button class="btn btn-secondary" onclick="exitReview()" style="padding:.3rem .75rem;font-size:.8rem;color:#fcd34d;border-color:#f5a62355">Volver a la ronda actual →</button>
+    </div>
+
+    <!-- Reset confirm dialog -->
+    <div id="g-reset-confirm" style="display:none;background:#ff525218;border:1px solid #ff525244;border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:1rem;font-size:.88rem;color:var(--sub)">
+      <strong style="color:var(--text)">¿Reiniciar el juego?</strong> Perderás los puntos y el progreso actuales.
+      <div style="display:flex;gap:.5rem;margin-top:.65rem">
+        <button class="btn btn-primary" style="background:#ff5252;border-color:#ff5252;font-size:.82rem;padding:.4rem .85rem" onclick="doReset()">Sí, reiniciar</button>
+        <button class="btn btn-secondary" style="font-size:.82rem;padding:.4rem .85rem" onclick="cancelReset()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem;text-align:center">
+        <div style="font-size:.72rem;color:var(--sub);margin-bottom:.15rem">⭐ Puntos</div>
+        <div id="g-score" style="font-size:1.6rem;font-weight:700;color:var(--amber)">0</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem;text-align:center">
+        <div style="font-size:.72rem;color:var(--sub);margin-bottom:.15rem">🏆 Ronda</div>
+        <div id="g-round" style="font-size:1.6rem;font-weight:700;color:var(--purple)">1 / 5</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem;text-align:center">
+        <div style="font-size:.72rem;color:var(--sub);margin-bottom:.15rem">✅ Correctas</div>
+        <div id="g-correct" style="font-size:1.6rem;font-weight:700;color:var(--green)">0</div>
+      </div>
+    </div>
+
+    <!-- Challenge card -->
+    <div class="card" id="g-challenge-card">
+      <div class="card-title" id="g-challenge-title">🎯 El reto</div>
+      <p style="font-size:.85rem;color:var(--sub);margin-bottom:1rem" id="g-challenge-desc">Descripción del reto</p>
+      <div id="g-given-vals" style="display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:.75rem"></div>
+      <div id="g-hint-box" style="background:#f5a62318;border-radius:var(--radius-sm);padding:.65rem .85rem;font-size:.85rem;color:#fcd34d;border:1px solid #f5a62333"></div>
+    </div>
+
+    <!-- Options -->
+    <div class="card">
+      <div class="card-title" id="g-opts-title">🤔 Elige la respuesta correcta</div>
+      <p style="font-size:.85rem;color:var(--sub);margin-bottom:1rem" id="g-opts-desc">Solo una opción es correcta.</p>
+      <div id="g-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:.75rem"></div>
+    </div>
+
+    <!-- Feedback -->
+    <div id="g-feedback" style="display:none"></div>
+
+    <!-- Visualization -->
+    <div id="g-viz-card" style="display:none" class="card">
+      <div class="card-title" id="g-viz-title"><span class="icon">🔬</span> Visualización</div>
+      <p style="font-size:.85rem;color:var(--sub);margin-bottom:.85rem" id="g-viz-desc"></p>
+      <div class="canvas-wrap"><canvas id="cv-game" style="height:160px"></canvas></div>
+      <div class="canvas-caption" id="g-canvas-cap"></div>
+      <div id="g-viz-explanation" style="margin-top:.85rem;background:var(--surface);border-radius:var(--radius-sm);padding:1rem;font-size:.88rem;color:var(--sub);line-height:1.7"></div>
+    </div>
+
+    <!-- Next / actions -->
+    <div id="g-next-wrap" style="display:none;margin-top:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+        <span id="g-review-note" style="font-size:.8rem;color:var(--muted)"></span>
+        <button class="btn btn-primary" id="g-next-btn" onclick="nextRound()">Siguiente ronda →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GAME OVER ── -->
+  <div id="game-over" style="display:none">
+    <div class="score-card">
+      <div class="score-emoji" id="go-emoji">🏆</div>
+      <div class="score-num" id="go-score">0</div>
+      <p style="color:var(--sub);font-size:.9rem;margin:.25rem 0 .5rem">puntos totales</p>
+      <p id="go-msg" style="font-size:1rem;color:var(--text);margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5"></p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" id="go-replay-btn" onclick="replayGame()">🔄 Jugar de nuevo</button>
+        <button class="btn btn-secondary" onclick="backToSelector()">🎮 Elegir otro juego</button>
+        <button class="btn btn-secondary" id="go-theory-btn" onclick="goTab('boyle')">📚 Repasar teoría</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div id="panel-quiz" class="panel">
+  <div id="quiz-intro">
+    <div class="quiz-start">
+      <div style="font-size:4rem;margin-bottom:.75rem">🧠</div>
+      <h2>Quiz de Leyes del Gas Ideal</h2>
+      <p>10 preguntas de selección múltiple. Cada respuesta viene con una explicación completa para que entiendas por qué es correcta (o incorrecta).</p>
+      <button class="btn btn-primary" onclick="startQuiz()">🚀 Comenzar quiz</button>
+    </div>
+  </div>
+  <div id="quiz-game" style="display:none">
+    <div class="progress-wrap"><div class="progress-bar" id="qpbar" style="width:10%"></div></div>
+    <div id="quiz-qwrap"></div>
+    <div id="quiz-actions" style="display:flex;justify-content:flex-end;margin-top:.85rem"></div>
+  </div>
+  <div id="quiz-result" style="display:none"></div>
+</div>
+
+</main>
+
+<script>
+/* ════ Tab switching ════ */
+function goTab(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelector('.t-'+id).classList.add('active');
+  if(id==='boyle'){calcBoyle();setTimeout(drawBoyleGraph,60)}
+  if(id==='charles')calcCharles();
+  if(id==='gay')calcGay();
+  if(id==='combined')calcCombined();
+  if(id==='game')initGame();
+}
+
+/* ════ Canvas helpers ════ */
+function twoBox(cvId,n1,n2,col1,col2,lbl1,lbl2,sameSize){
+  const cv=document.getElementById(cvId);if(!cv)return;
+  const W=cv.offsetWidth||700;const H=130;cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#1a1d2e';ctx.fillRect(0,0,W,H);
+  const gap=14,pad=10;
+  const w1=sameSize?Math.floor((W-gap-pad*2)/2):Math.floor((W-gap-pad*2)*0.5);
+  const w2=W-gap-pad*2-w1;
+  function box(x,bw,col,lbl,n){
+    ctx.strokeStyle=col+'99';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(x,8,bw,H-26,5);ctx.stroke();
+    ctx.fillStyle=col+'14';ctx.fill();
+    const seed=x+bw+n;
+    for(let i=0;i<n;i++){
+      const px=x+12+(Math.sin(i*2.4+seed)*0.5+0.5)*(bw-24);
+      const py=16+(Math.cos(i*1.7+seed)*0.5+0.5)*(H-42);
+      ctx.beginPath();ctx.arc(px,py,3.2,0,Math.PI*2);
+      ctx.fillStyle=col+'cc';ctx.fill();
+    }
+    ctx.fillStyle=col;ctx.font='bold 10.5px system-ui';ctx.textAlign='center';
+    ctx.fillText(lbl,x+bw/2,H-8);
+  }
+  box(pad,w1,col1,lbl1,Math.max(2,n1));
+  box(pad+w1+gap,w2,col2,lbl2,Math.max(2,n2));
+}
+
+/* ════ Boyle ════ */
+function calcBoyle(){
+  const p1=+document.getElementById('b-p1').value;
+  const v1=+document.getElementById('b-v1').value;
+  const p2=+document.getElementById('b-p2').value;
+  const v2=(p1*v1)/p2;
+  document.getElementById('b-p1-v').textContent=p1.toFixed(1)+' atm';
+  document.getElementById('b-v1-v').textContent=v1.toFixed(1)+' L';
+  document.getElementById('b-p2-v').textContent=p2.toFixed(1)+' atm';
+  document.getElementById('b-v2-v').textContent=v2.toFixed(2)+' L';
+  document.getElementById('b-rv').textContent='✓ '+(p1*v1).toFixed(2)+' = '+(p2*v2).toFixed(2);
+  const ratio=v2/v1;
+  const pct=Math.abs((ratio-1)*100).toFixed(0);
+  const hint=ratio<0.95?`el volumen se redujo un ${pct}%`:ratio>1.05?`el volumen creció un ${pct}%`:'el volumen casi no cambió';
+  document.getElementById('b-v2-hint').textContent=hint;
+  const h=document.getElementById('b-happening');
+  if(p2>p1*1.05){
+    h.innerHTML=`<div class="happening-title" style="color:#b0a4ff">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Presión aumentó ${(p2/p1).toFixed(1)}x</strong> → el gas se comprimió. Las moléculas tienen menos espacio → chocan más seguido contra las paredes → más presión. El volumen pasó de ${v1.toFixed(1)}L a ${v2.toFixed(2)}L.`;
+  } else if(p2<p1*0.95){
+    h.innerHTML=`<div class="happening-title" style="color:#b0a4ff">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Presión disminuyó</strong> → el gas se expandió. Con menos presión que lo contiene, las moléculas ocupan más espacio → el volumen creció de ${v1.toFixed(1)}L a ${v2.toFixed(2)}L.`;
+  } else {
+    h.innerHTML=`<div class="happening-title" style="color:#b0a4ff">🔬 Lo que está pasando</div>
+    Presión inicial y final son iguales → el volumen no cambia. Recuerda: P·V = ${(p1*v1).toFixed(1)} es la constante de este gas.`;
+  }
+  const n1=Math.round(10*p1/1);const n2=Math.round(10*p2/1);
+  const cap=p2>p1?`Contenedor izquierdo: V₁=${v1}L con P₁=${p1}atm. Derecha: V₂=${v2.toFixed(1)}L con P₂=${p2}atm (más comprimido).`:
+    p2<p1?`Izquierda: estado inicial. Derecha: el gas se expandió al bajar la presión.`:
+    'Misma presión → mismo volumen.';
+  document.getElementById('b-canvas-cap').textContent=cap;
+  twoBox('cv-boyle',n1,n2,'#7c6dff','#4a9eff',`V₁=${v1.toFixed(1)}L | P₁=${p1.toFixed(1)}atm`,`V₂=${v2.toFixed(2)}L | P₂=${p2.toFixed(1)}atm`,false);
+  drawBoyleGraph(p1,v1);
+}
+
+function drawBoyleGraph(p1=1,v1=10){
+  const cv=document.getElementById('cv-boyle-graph');if(!cv)return;
+  const W=cv.offsetWidth||700;cv.width=W;cv.height=200;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#1a1d2e';ctx.fillRect(0,0,W,200);
+  const pl={l:44,r:24,t:18,b:36};
+  const W2=W-pl.l-pl.r,H2=200-pl.t-pl.b;
+  const k=p1*v1;const vMax=22,pMax=7;
+  ctx.strokeStyle='#2e3354';ctx.lineWidth=0.8;
+  for(let i=1;i<6;i++){
+    ctx.beginPath();ctx.moveTo(pl.l+W2*i/5,pl.t);ctx.lineTo(pl.l+W2*i/5,pl.t+H2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pl.l,pl.t+H2*i/5);ctx.lineTo(pl.l+W2,pl.t+H2*i/5);ctx.stroke();
+  }
+  ctx.beginPath();ctx.moveTo(pl.l,pl.t+H2);ctx.lineTo(pl.l+W2,pl.t+H2);ctx.strokeStyle='#3d4470';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pl.l,pl.t);ctx.lineTo(pl.l,pl.t+H2);ctx.stroke();
+  ctx.strokeStyle='#7c6dff';ctx.lineWidth=2.2;ctx.beginPath();
+  let first=true;
+  for(let v=0.4;v<=vMax;v+=0.15){
+    const p=k/v;if(p>pMax)continue;
+    const x=pl.l+W2*(v/vMax),y=pl.t+H2*(1-p/pMax);
+    if(first){ctx.moveTo(x,y);first=false;}else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  const dx=pl.l+W2*(v1/vMax),dy=pl.t+H2*(1-p1/pMax);
+  ctx.beginPath();ctx.arc(dx,dy,6,0,Math.PI*2);ctx.fillStyle='#ff6584';ctx.fill();
+  ctx.strokeStyle='#ff658888';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pl.l,dy);ctx.lineTo(dx,dy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(dx,pl.t+H2);ctx.lineTo(dx,dy);ctx.stroke();
+  ctx.fillStyle='#9099c4';ctx.font='11px system-ui';ctx.textAlign='center';
+  ctx.fillText('Volumen V (L)',pl.l+W2/2,200-4);
+  ctx.save();ctx.translate(13,pl.t+H2/2);ctx.rotate(-Math.PI/2);ctx.fillText('Presión P (atm)',0,0);ctx.restore();
+  for(let i=1;i<=5;i++){
+    ctx.fillText((vMax*i/5).toFixed(0),pl.l+W2*i/5,pl.t+H2+14);
+  }
+}
+
+/* ════ Charles ════ */
+function calcCharles(){
+  const v1=+document.getElementById('c-v1').value;
+  const t1=+document.getElementById('c-t1').value;
+  const t2=+document.getElementById('c-t2').value;
+  const v2=(v1*t2)/t1;
+  document.getElementById('c-v1-v').textContent=v1.toFixed(1)+' L';
+  document.getElementById('c-t1-v').textContent=t1+' K';
+  document.getElementById('c-t1-c').textContent='= '+(t1-273)+'°C';
+  document.getElementById('c-t2-v').textContent=t2+' K';
+  document.getElementById('c-t2-c').textContent='= '+(t2-273)+'°C';
+  document.getElementById('c-v2-v').textContent=v2.toFixed(2)+' L';
+  document.getElementById('c-rv').textContent='✓ '+(v1/t1).toFixed(5)+' = '+(v2/t2).toFixed(5);
+  const pct=Math.abs((v2/v1-1)*100).toFixed(0);
+  const hint=v2>v1*1.05?`el gas se expandió un ${pct}%`:v2<v1*0.95?`el gas se contrajo un ${pct}%`:'el volumen casi no cambió';
+  document.getElementById('c-v2-hint').textContent=hint;
+  const h=document.getElementById('c-happening');
+  if(t2>t1){
+    h.innerHTML=`<div class="happening-title" style="color:#fda4af">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Temperatura subió de ${t1-273}°C a ${t2-273}°C</strong> → las moléculas se mueven <strong style="color:var(--text)">más rápido</strong> → necesitan más espacio → el volumen creció de ${v1.toFixed(1)}L a ${v2.toFixed(2)}L. La proporción V/T = ${(v1/t1).toFixed(4)} no cambió.`;
+  } else if(t2<t1){
+    h.innerHTML=`<div class="happening-title" style="color:#fda4af">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Temperatura bajó de ${t1-273}°C a ${t2-273}°C</strong> → las moléculas se mueven <strong style="color:var(--text)">más lento</strong> → se "encogen" → el volumen pasó de ${v1.toFixed(1)}L a ${v2.toFixed(2)}L.`;
+  } else {
+    h.innerHTML=`<div class="happening-title" style="color:#fda4af">🔬 Lo que está pasando</div>
+    Temperatura sin cambio → volumen sin cambio. La constante V/T = ${(v1/t1).toFixed(4)} se mantiene.`;
+  }
+  const col1=t1>400?'#ff6584':t1>250?'#f5a623':'#4a9eff';
+  const col2=t2>400?'#ff6584':t2>250?'#f5a623':'#4a9eff';
+  document.getElementById('c-canvas-cap').textContent=`Izquierda: V₁=${v1}L a ${t1}K (${t1-273}°C). Derecha: V₂=${v2.toFixed(1)}L a ${t2}K (${t2-273}°C).`;
+  twoBox('cv-charles',12,12,col1,col2,`V₁=${v1}L | T₁=${t1}K`,`V₂=${v2.toFixed(1)}L | T₂=${t2}K`,false);
+}
+
+/* ════ Gay-Lussac ════ */
+function calcGay(){
+  const p1=+document.getElementById('g-p1').value;
+  const t1=+document.getElementById('g-t1').value;
+  const t2=+document.getElementById('g-t2').value;
+  const p2=(p1*t2)/t1;
+  document.getElementById('g-p1-v').textContent=p1.toFixed(1)+' atm';
+  document.getElementById('g-t1-v').textContent=t1+' K';
+  document.getElementById('g-t1-c').textContent='= '+(t1-273)+'°C';
+  document.getElementById('g-t2-v').textContent=t2+' K';
+  document.getElementById('g-t2-c').textContent='= '+(t2-273)+'°C';
+  document.getElementById('g-p2-v').textContent=p2.toFixed(2)+' atm';
+  document.getElementById('g-rv').textContent='✓ '+(p1/t1).toFixed(6)+' = '+(p2/t2).toFixed(6);
+  const pct=Math.abs((p2/p1-1)*100).toFixed(0);
+  const hint=p2>p1*1.05?`presión aumentó un ${pct}%`:p2<p1*0.95?`presión bajó un ${pct}%`:'presión casi sin cambio';
+  document.getElementById('g-p2-hint').textContent=hint;
+  const h=document.getElementById('g-happening');
+  const n1=Math.round(6+t1/60),n2=Math.round(6+t2/60);
+  if(t2>t1){
+    h.innerHTML=`<div class="happening-title" style="color:#6ee7b7">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Temperatura subió a ${t2-273}°C</strong> en un recipiente que <strong style="color:var(--text)">no puede expandirse</strong>. Las moléculas golpean las paredes con más fuerza y frecuencia → la presión subió de ${p1.toFixed(1)} a ${p2.toFixed(2)} atm.`;
+  } else if(t2<t1){
+    h.innerHTML=`<div class="happening-title" style="color:#6ee7b7">🔬 Lo que está pasando</div>
+    <strong style="color:var(--text)">Temperatura bajó a ${t2-273}°C</strong> → moléculas más lentas → menos golpes contra las paredes → la presión cayó de ${p1.toFixed(1)} a ${p2.toFixed(2)} atm.`;
+  } else {
+    h.innerHTML=`<div class="happening-title" style="color:#6ee7b7">🔬 Lo que está pasando</div>
+    Sin cambio de temperatura → sin cambio de presión. P/T = ${(p1/t1).toFixed(5)} es constante.`;
+  }
+  document.getElementById('g-canvas-cap').textContent=`Recipiente rígido (V fijo). Izquierda: T₁=${t1}K, P₁=${p1}atm. Derecha: T₂=${t2}K, P₂=${p2.toFixed(1)}atm. Mismo espacio, distintos choques.`;
+  twoBox('cv-gay',n1,n2,'#4caf9a','#ff6584',`P₁=${p1}atm | T₁=${t1}K`,`P₂=${p2.toFixed(1)}atm | T₂=${t2}K`,true);
+}
+
+/* ════ Combined ════ */
+function calcCombined(){
+  const p1=+document.getElementById('cb-p1').value;
+  const v1=+document.getElementById('cb-v1').value;
+  const t1=+document.getElementById('cb-t1').value;
+  const p2=+document.getElementById('cb-p2').value;
+  const t2=+document.getElementById('cb-t2').value;
+  const v2=(p1*v1*t2)/(t1*p2);
+  document.getElementById('cb-p1-v').textContent=p1.toFixed(1)+' atm';
+  document.getElementById('cb-v1-v').textContent=v1.toFixed(1)+' L';
+  document.getElementById('cb-t1-v').textContent=`${t1} K (${t1-273}°C)`;
+  document.getElementById('cb-p2-v').textContent=p2.toFixed(1)+' atm';
+  document.getElementById('cb-t2-v').textContent=`${t2} K (${t2-273}°C)`;
+  document.getElementById('cb-v2').textContent=v2.toFixed(2)+' L';
+  const delta=((v2-v1)/v1*100);
+  document.getElementById('cb-v2-hint').textContent=delta>0.5?`↑ aumentó ${delta.toFixed(0)}% respecto a V₁`:delta<-0.5?`↓ disminuyó ${Math.abs(delta).toFixed(0)}% respecto a V₁`:'casi sin cambio respecto a V₁';
+  document.getElementById('cb-rv').textContent='✓ '+(p1*v1/t1).toFixed(5)+' = '+(p2*v2/t2).toFixed(5);
+  const sol=document.getElementById('cb-solution');
+  sol.innerHTML=`<div class="s-label">SOLUCIÓN PASO A PASO</div>
+<span style="color:#9099c4">Datos conocidos:</span>
+  P₁ = ${p1.toFixed(1)} atm    V₁ = ${v1.toFixed(1)} L    T₁ = ${t1} K (${t1-273}°C)
+  P₂ = ${p2.toFixed(1)} atm    T₂ = ${t2} K (${t2-273}°C)    V₂ = ?
+
+<span style="color:#9099c4">Fórmula:</span>
+  (P₁ × V₁) / T₁  =  (P₂ × V₂) / T₂
+
+<span style="color:#9099c4">Despejando V₂:</span>
+  V₂ = (P₁ × V₁ × T₂) / (T₁ × P₂)
+
+<span style="color:#9099c4">Sustituyendo valores:</span>
+  V₂ = (${p1.toFixed(1)} × ${v1.toFixed(1)} × ${t2}) / (${t1} × ${p2.toFixed(1)})
+  V₂ = ${(p1*v1*t2).toFixed(2)} / ${(t1*p2).toFixed(2)}
+
+<span class="highlight">  V₂ = ${v2.toFixed(2)} L  ✓</span>
+
+<span style="color:#9099c4">Verificación:</span>
+  (P₁×V₁)/T₁ = (${p1.toFixed(1)}×${v1.toFixed(1)})/${t1} = ${(p1*v1/t1).toFixed(5)}
+  (P₂×V₂)/T₂ = (${p2.toFixed(1)}×${v2.toFixed(2)})/${t2} = ${(p2*v2/t2).toFixed(5)}  ✓ iguales`;
+}
+
+/* ════ Quiz ════ */
+const QS=[
+  {q:"Un gas ocupa 4 L a 2 atm (T=cte). Si la presión sube a 4 atm, ¿cuál es el nuevo volumen?",opts:["8 L","2 L","1 L","4 L"],a:1,law:"Boyle",exp:"Usamos Boyle: P₁V₁=P₂V₂ → 2×4 = 4×V₂ → V₂ = 8/4 = 2 L. Al duplicar la presión, el volumen se reduce a la mitad. Es inversamente proporcional."},
+  {q:"¿Cuál ley se aplica cuando la temperatura permanece constante y la presión y el volumen cambian?",opts:["Ley de Charles","Ley de Gay-Lussac","Ley de Boyle","Ley Combinada"],a:2,law:"Boyle",exp:"La Ley de Boyle (P₁V₁=P₂V₂) aplica cuando T es constante. Charles aplica cuando P es constante. Gay-Lussac cuando V es constante."},
+  {q:"Un gas ocupa 6 L a 300 K (P=cte). Si la temperatura sube a 450 K, ¿cuál es el nuevo volumen?",opts:["4 L","9 L","12 L","3 L"],a:1,law:"Charles",exp:"Charles: V₁/T₁ = V₂/T₂ → 6/300 = V₂/450 → V₂ = 6×450/300 = 9 L. La temperatura aumentó 1.5x → el volumen también aumentó 1.5x. Relación directa."},
+  {q:"¿Por qué en las fórmulas de los gases siempre hay que usar temperatura en Kelvin y no en Celsius?",opts:["Porque es más fácil calcular","Porque 0°C no es la ausencia de temperatura — las moléculas aún se mueven","Porque lo establece el sistema internacional","Porque los instrumentos lo miden en Kelvin"],a:1,law:"Conceptos",exp:"0°C = 273 K. En Kelvin, el 0 absoluto (0 K = −273°C) es donde el movimiento molecular se detiene. Si usaras 0°C en la fórmula, divides por cero. El Kelvin refleja la energía cinética real."},
+  {q:"Un recipiente rígido tiene gas a 1 atm y 300 K. Si enfriamos el gas a 150 K, ¿qué ocurre con la presión?",opts:["Sube a 2 atm","Baja a 0.5 atm","No cambia","Baja a 0.25 atm"],a:1,law:"Gay-Lussac",exp:"Gay-Lussac: P₁/T₁ = P₂/T₂ → 1/300 = P₂/150 → P₂ = 150/300 = 0.5 atm. Al bajar T a la mitad (en Kelvin), P también baja a la mitad."},
+  {q:"Un neumático tiene más presión en un día muy caluroso que en uno frío. ¿Qué ley explica esto?",opts:["Ley de Boyle","Ley de Charles","Ley de Gay-Lussac","Ley de Dalton"],a:2,law:"Gay-Lussac",exp:"El neumático es casi rígido → V=constante. Al subir la temperatura exterior, la T del gas sube → P sube. Eso es Gay-Lussac: P/T=constante con V fijo."},
+  {q:"¿Cuál es la ecuación correcta de la Ley Combinada?",opts:["P₁V₁T₁ = P₂V₂T₂","(P₁V₁)/T₁ = (P₂V₂)/T₂","P₁/(V₁T₁) = P₂/(V₂T₂)","(P₁T₁)/V₁ = (P₂T₂)/V₂"],a:1,law:"Combinada",exp:"La forma correcta es (P₁·V₁)/T₁ = (P₂·V₂)/T₂. Si fijas T → Boyle. Si fijas P → Charles. Si fijas V → Gay-Lussac. La ley combinada las incluye a todas."},
+  {q:"Un gas pasa de P₁=2atm, V₁=5L, T₁=400K a P₂=4atm y T₂=200K. ¿Cuál es V₂?",opts:["5 L","1.25 L","10 L","2.5 L"],a:1,law:"Combinada",exp:"V₂=(P₁·V₁·T₂)/(T₁·P₂) = (2×5×200)/(400×4) = 2000/1600 = 1.25 L. Nota: la presión aumentó (V↓) Y la temperatura bajó (V↓) → el volumen disminuyó mucho."},
+  {q:"¿Qué le sucede molecularmente a un gas cuando se aumenta su temperatura a volumen constante?",opts:["Las moléculas se hacen más grandes","Las moléculas se mueven más rápido y golpean las paredes con más fuerza","Las moléculas se separan y desaparecen","Las moléculas se vuelven más pesadas"],a:1,law:"Conceptos",exp:"La temperatura es energía cinética promedio. Más T → moléculas más rápidas → más y más fuertes choques contra las paredes → mayor presión (si V es fijo). Por eso Gay-Lussac: P↑ cuando T↑."},
+  {q:"En la Ley Combinada, si mantenemos T₁=T₂ (temperatura constante), ¿qué ley individual obtenemos?",opts:["Ley de Charles","Ley de Gay-Lussac","Ley de Boyle","Ninguna"],a:2,law:"Combinada",exp:"Si T₁=T₂, se cancelan en la ecuación: (P₁V₁)/T = (P₂V₂)/T → P₁V₁ = P₂V₂. ¡Eso es exactamente la Ley de Boyle! La ley combinada 'contiene' a Boyle, Charles y Gay-Lussac."}
+];
+let qi=0,sc=0,ans=false;
+const lcols={Boyle:'#b0a4ff',Charles:'#fda4af','Gay-Lussac':'#6ee7b7',Combinada:'#fcd34d',Conceptos:'#93c5fd'};
+
+function startQuiz(){
+  qi=0;sc=0;ans=false;
+  document.getElementById('quiz-intro').style.display='none';
+  document.getElementById('quiz-game').style.display='block';
+  document.getElementById('quiz-result').style.display='none';
+  showQ();
+}
+function showQ(){
+  if(qi>=QS.length){showScore();return}
+  ans=false;
+  document.getElementById('quiz-actions').innerHTML='';
+  const q=QS[qi];
+  const pct=((qi+1)/QS.length*100).toFixed(0);
+  document.getElementById('qpbar').style.width=pct+'%';
+  const lc=lcols[q.law]||'#9099c4';
+  const keys=['A','B','C','D'];
+  document.getElementById('quiz-qwrap').innerHTML=`
+    <div class="q-card">
+      <div class="q-meta">
+        <span>Pregunta ${qi+1} de ${QS.length}</span>
+        <span class="q-law-tag" style="background:${lc}22;color:${lc};border:1px solid ${lc}44">${q.law}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">
+        ${q.opts.map((o,i)=>`<div class="q-opt" id="qo${i}" onclick="pickA(${i})"><span class="q-key">${keys[i]}</span>${o}</div>`).join('')}
+      </div>
+      <div class="q-feedback" id="qfb"></div>
+    </div>`;
+}
+function pickA(i){
+  if(ans)return;ans=true;
+  const q=QS[qi];
+  document.querySelectorAll('.q-opt').forEach(o=>o.classList.add('disabled'));
+  document.getElementById('qo'+i).classList.add(i===q.a?'correct':'wrong');
+  if(i!==q.a)document.getElementById('qo'+q.a).classList.add('correct');
+  if(i===q.a)sc++;
+  const fb=document.getElementById('qfb');
+  const ok=i===q.a;
+  fb.style.cssText=`display:block;background:${ok?'#4caf9a18':'#ff525218'};border-color:${ok?'#4caf9a':'#ff5252'};color:${ok?'#6ee7b7':'#fca5a5'}`;
+  fb.innerHTML=`<strong>${ok?'✅ ¡Correcto!':'❌ Incorrecto.'}</strong> ${q.exp}`;
+  document.getElementById('quiz-actions').innerHTML=`<button class="btn btn-primary" onclick="nextQ()">${qi+1<QS.length?'Siguiente pregunta →':'Ver resultado 🏆'}</button>`;
+}
+function nextQ(){qi++;showQ()}
+function showScore(){
+  document.getElementById('quiz-game').style.display='none';
+  const pct=Math.round(sc/QS.length*100);
+  const emoji=pct>=90?'🏆':pct>=70?'🌟':pct>=50?'👍':'📖';
+  const msg=pct>=90?'¡Excelente! Dominas las leyes del gas ideal.':pct>=70?'¡Muy bien! Repasa lo que fallaste y vuelve a intentarlo.':pct>=50?'Vas bien. Te recomendamos repasar los conceptos y volver.':'Revisa la teoría sección por sección y vuelve cuando estés listo.';
+  document.getElementById('quiz-result').style.display='block';
+  document.getElementById('quiz-result').innerHTML=`
+    <div class="score-card">
+      <div class="score-emoji">${emoji}</div>
+      <div class="score-num">${sc} / ${QS.length}</div>
+      <p style="color:var(--sub);font-size:.9rem;margin:.25rem 0 .85rem">${pct}% de respuestas correctas</p>
+      <p style="font-size:1rem;color:var(--text);margin-bottom:1.5rem">${msg}</p>
+      <div class="progress-wrap" style="max-width:260px;margin:0 auto 1.5rem">
+        <div class="progress-bar" style="width:${pct}%;background:linear-gradient(90deg,${pct>=70?'#4caf9a':'#ff6584'},${pct>=70?'#7c6dff':'#f5a623'})"></div>
+      </div>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="startQuiz()">🔄 Intentar de nuevo</button>
+        <button class="btn btn-secondary" onclick="goTab('boyle')">📚 Repasar teoría</button>
+      </div>
+    </div>`;
+}
+
+/* ════ MULTI-LAW GAME ENGINE ════ */
+
+const GAME_DATA = {
+  boyle: {
+    name: '📦 Ley de Boyle', color: '#7c6dff', colorLight: '#b0a4ff',
+    badgeBg: '#7c6dff22', badgeBorder: '#7c6dff44', formula: 'P₁·V₁ = P₂·V₂',
+    theoryTab: 'boyle',
+    challengeTitle: '🎯 Estado inicial — Temperatura constante',
+    challengeDesc: 'Tienes este gas. La <strong>constante k = P·V</strong> no puede cambiar porque T no varía. Elige los valores correctos de P₂ y V₂.',
+    optsTitle: '🤔 Elige P₂ y V₂ correctos', optsDesc: 'Solo una combinación satisface P₁·V₁ = P₂·V₂.',
+    vizTitle: '🔬 Visualización — Ley de Boyle',
+    rounds: [
+      { given:[{lbl:'P₁',val:'2 atm'},{lbl:'V₁',val:'5 L'}], hint:'📌 k = P₁·V₁ = 2×5 = 10 · La respuesta correcta también debe dar 10.',
+        correct:{labels:['P₂','V₂'],values:[4,2.5],units:['atm','L'],display:'P₂=4 atm · V₂=2.5 L'},
+        wrong:[{labels:['P₂','V₂'],values:[4,3],units:['atm','L'],display:'P₂=4 atm · V₂=3 L'},{labels:['P₂','V₂'],values:[3,4],units:['atm','L'],display:'P₂=3 atm · V₂=4 L'},{labels:['P₂','V₂'],values:[1,8],units:['atm','L'],display:'P₂=1 atm · V₂=8 L'}],
+        explanation:()=>`P duplicó (2→4 atm) entonces V÷2: 5÷2 = <strong style="color:#b0a4ff">2.5 L</strong>. Verifica: 4×2.5 = <strong style="color:var(--amber)">10 ✓</strong>`,
+        vizFn:()=>renderBoyleViz(2,5,4,2.5) },
+      { given:[{lbl:'P₁',val:'3 atm'},{lbl:'V₁',val:'6 L'}], hint:'📌 k = 3×6 = 18 · P₂×V₂ debe dar 18.',
+        correct:{labels:['P₂','V₂'],values:[9,2],units:['atm','L'],display:'P₂=9 atm · V₂=2 L'},
+        wrong:[{labels:['P₂','V₂'],values:[6,3],units:['atm','L'],display:'P₂=6 atm · V₂=3 L'},{labels:['P₂','V₂'],values:[2,8],units:['atm','L'],display:'P₂=2 atm · V₂=8 L'},{labels:['P₂','V₂'],values:[9,3],units:['atm','L'],display:'P₂=9 atm · V₂=3 L'}],
+        explanation:()=>`P triplicó (3→9), V÷3: 6÷3 = <strong style="color:#b0a4ff">2 L</strong>. Verifica: 9×2 = <strong style="color:var(--amber)">18 ✓</strong>`,
+        vizFn:()=>renderBoyleViz(3,6,9,2) },
+      { given:[{lbl:'P₁',val:'1 atm'},{lbl:'V₁',val:'10 L'}], hint:'📌 k = 1×10 = 10 · Busca P₂×V₂=10.',
+        correct:{labels:['P₂','V₂'],values:[5,2],units:['atm','L'],display:'P₂=5 atm · V₂=2 L'},
+        wrong:[{labels:['P₂','V₂'],values:[5,5],units:['atm','L'],display:'P₂=5 atm · V₂=5 L'},{labels:['P₂','V₂'],values:[2,6],units:['atm','L'],display:'P₂=2 atm · V₂=6 L'},{labels:['P₂','V₂'],values:[4,3],units:['atm','L'],display:'P₂=4 atm · V₂=3 L'}],
+        explanation:()=>`P×5 (1→5), V÷5: 10÷5 = <strong style="color:#b0a4ff">2 L</strong>. Verifica: 5×2 = <strong style="color:var(--amber)">10 ✓</strong>`,
+        vizFn:()=>renderBoyleViz(1,10,5,2) },
+      { given:[{lbl:'P₁',val:'4 atm'},{lbl:'V₁',val:'3 L'}], hint:'📌 k = 4×3 = 12 · P₂×V₂ debe dar 12.',
+        correct:{labels:['P₂','V₂'],values:[2,6],units:['atm','L'],display:'P₂=2 atm · V₂=6 L'},
+        wrong:[{labels:['P₂','V₂'],values:[2,4],units:['atm','L'],display:'P₂=2 atm · V₂=4 L'},{labels:['P₂','V₂'],values:[6,2],units:['atm','L'],display:'P₂=6 atm · V₂=2 L'},{labels:['P₂','V₂'],values:[1,8],units:['atm','L'],display:'P₂=1 atm · V₂=8 L'}],
+        explanation:()=>`P bajó a la mitad (4→2), V×2: 3×2 = <strong style="color:#b0a4ff">6 L</strong>. Verifica: 2×6 = <strong style="color:var(--amber)">12 ✓</strong>`,
+        vizFn:()=>renderBoyleViz(4,3,2,6) },
+      { given:[{lbl:'P₁',val:'6 atm'},{lbl:'V₁',val:'4 L'}], hint:'📌 k = 6×4 = 24 · Busca P₂×V₂=24.',
+        correct:{labels:['P₂','V₂'],values:[3,8],units:['atm','L'],display:'P₂=3 atm · V₂=8 L'},
+        wrong:[{labels:['P₂','V₂'],values:[3,6],units:['atm','L'],display:'P₂=3 atm · V₂=6 L'},{labels:['P₂','V₂'],values:[8,3],units:['atm','L'],display:'P₂=8 atm · V₂=3 L'},{labels:['P₂','V₂'],values:[12,2],units:['atm','L'],display:'P₂=12 atm · V₂=2 L'}],
+        explanation:()=>`P bajó a la mitad (6→3), V×2: 4×2 = <strong style="color:#b0a4ff">8 L</strong>. Verifica: 3×8 = <strong style="color:var(--amber)">24 ✓</strong>`,
+        vizFn:()=>renderBoyleViz(6,4,3,8) },
+    ]
+  },
+  charles: {
+    name: '🌡️ Ley de Charles', color: '#ff6584', colorLight: '#fda4af',
+    badgeBg: '#ff658422', badgeBorder: '#ff658444', formula: 'V₁/T₁ = V₂/T₂',
+    theoryTab: 'charles',
+    challengeTitle: '🎯 Estado inicial — Presión constante',
+    challengeDesc: 'El gas está a presión constante. Al cambiar la temperatura, el volumen cambia en la <strong>misma proporción</strong>. T siempre en Kelvin (K = °C + 273).',
+    optsTitle: '🤔 Elige el nuevo volumen V₂', optsDesc: 'Calcula: V₂ = (V₁ × T₂) / T₁.',
+    vizTitle: '🔬 Visualización — Ley de Charles',
+    rounds: [
+      { given:[{lbl:'V₁',val:'5 L'},{lbl:'T₁',val:'300 K (27°C)'},{lbl:'T₂',val:'600 K (327°C)'}], hint:'📌 T se duplicó (300→600). V también debe duplicarse: 5×2 = 10 L.',
+        correct:{labels:['V₂'],values:[10],units:['L'],display:'V₂ = 10 L'},
+        wrong:[{labels:['V₂'],values:[7.5],units:['L'],display:'V₂ = 7.5 L'},{labels:['V₂'],values:[2.5],units:['L'],display:'V₂ = 2.5 L'},{labels:['V₂'],values:[15],units:['L'],display:'V₂ = 15 L'}],
+        explanation:()=>`V₂ = (5×600)/300 = 3000/300 = <strong style="color:#fda4af">10 L</strong>. T se duplicó → V se duplicó.`,
+        vizFn:()=>renderCharlesViz(5,300,600,10) },
+      { given:[{lbl:'V₁',val:'8 L'},{lbl:'T₁',val:'400 K (127°C)'},{lbl:'T₂',val:'200 K (−73°C)'}], hint:'📌 T bajó a la mitad (400→200). V también bajará a la mitad: 8÷2 = 4 L.',
+        correct:{labels:['V₂'],values:[4],units:['L'],display:'V₂ = 4 L'},
+        wrong:[{labels:['V₂'],values:[16],units:['L'],display:'V₂ = 16 L'},{labels:['V₂'],values:[6],units:['L'],display:'V₂ = 6 L'},{labels:['V₂'],values:[3.2],units:['L'],display:'V₂ = 3.2 L'}],
+        explanation:()=>`V₂ = (8×200)/400 = 1600/400 = <strong style="color:#fda4af">4 L</strong>. T bajó a la mitad → V bajó a la mitad.`,
+        vizFn:()=>renderCharlesViz(8,400,200,4) },
+      { given:[{lbl:'V₁',val:'3 L'},{lbl:'T₁',val:'273 K (0°C)'},{lbl:'T₂',val:'546 K (273°C)'}], hint:'📌 T se duplicó (273→546). V se duplicará: 3×2 = 6 L.',
+        correct:{labels:['V₂'],values:[6],units:['L'],display:'V₂ = 6 L'},
+        wrong:[{labels:['V₂'],values:[9],units:['L'],display:'V₂ = 9 L'},{labels:['V₂'],values:[4.5],units:['L'],display:'V₂ = 4.5 L'},{labels:['V₂'],values:[1.5],units:['L'],display:'V₂ = 1.5 L'}],
+        explanation:()=>`V₂ = (3×546)/273 = <strong style="color:#fda4af">6 L</strong>. T se duplicó → V se duplicó.`,
+        vizFn:()=>renderCharlesViz(3,273,546,6) },
+      { given:[{lbl:'V₁',val:'12 L'},{lbl:'T₁',val:'500 K (227°C)'},{lbl:'T₂',val:'250 K (−23°C)'}], hint:'📌 T bajó a la mitad (500→250). V bajará a la mitad: 12÷2 = 6 L.',
+        correct:{labels:['V₂'],values:[6],units:['L'],display:'V₂ = 6 L'},
+        wrong:[{labels:['V₂'],values:[24],units:['L'],display:'V₂ = 24 L'},{labels:['V₂'],values:[8],units:['L'],display:'V₂ = 8 L'},{labels:['V₂'],values:[4.8],units:['L'],display:'V₂ = 4.8 L'}],
+        explanation:()=>`V₂ = (12×250)/500 = 3000/500 = <strong style="color:#fda4af">6 L</strong>. T bajó a la mitad → V bajó a la mitad.`,
+        vizFn:()=>renderCharlesViz(12,500,250,6) },
+      { given:[{lbl:'V₁',val:'6 L'},{lbl:'T₁',val:'300 K (27°C)'},{lbl:'T₂',val:'450 K (177°C)'}], hint:'📌 T aumentó 1.5x (300→450). V también aumentará 1.5x: 6×1.5 = 9 L.',
+        correct:{labels:['V₂'],values:[9],units:['L'],display:'V₂ = 9 L'},
+        wrong:[{labels:['V₂'],values:[12],units:['L'],display:'V₂ = 12 L'},{labels:['V₂'],values:[4],units:['L'],display:'V₂ = 4 L'},{labels:['V₂'],values:[7.5],units:['L'],display:'V₂ = 7.5 L'}],
+        explanation:()=>`V₂ = (6×450)/300 = 2700/300 = <strong style="color:#fda4af">9 L</strong>. T aumentó 1.5x → V aumentó 1.5x.`,
+        vizFn:()=>renderCharlesViz(6,300,450,9) },
+    ]
+  },
+  gay: {
+    name: '🔥 Gay-Lussac', color: '#4caf9a', colorLight: '#6ee7b7',
+    badgeBg: '#4caf9a22', badgeBorder: '#4caf9a44', formula: 'P₁/T₁ = P₂/T₂',
+    theoryTab: 'gay',
+    challengeTitle: '🎯 Recipiente rígido — Volumen constante',
+    challengeDesc: 'Gas en un <strong>recipiente que no puede expandirse</strong>. Al cambiar T, la presión cambia en la misma proporción. T siempre en Kelvin.',
+    optsTitle: '🤔 Elige la nueva presión P₂', optsDesc: 'Calcula: P₂ = (P₁ × T₂) / T₁.',
+    vizTitle: '🔬 Visualización — Gay-Lussac',
+    rounds: [
+      { given:[{lbl:'P₁',val:'1 atm'},{lbl:'T₁',val:'300 K (27°C)'},{lbl:'T₂',val:'600 K (327°C)'}], hint:'📌 T se duplicó (300→600). P también debe duplicarse: 1×2 = 2 atm.',
+        correct:{labels:['P₂'],values:[2],units:['atm'],display:'P₂ = 2 atm'},
+        wrong:[{labels:['P₂'],values:[1.5],units:['atm'],display:'P₂ = 1.5 atm'},{labels:['P₂'],values:[3],units:['atm'],display:'P₂ = 3 atm'},{labels:['P₂'],values:[0.5],units:['atm'],display:'P₂ = 0.5 atm'}],
+        explanation:()=>`P₂ = (1×600)/300 = <strong style="color:#6ee7b7">2 atm</strong>. T se duplicó → P se duplicó.`,
+        vizFn:()=>renderGayViz(1,300,600,2) },
+      { given:[{lbl:'P₁',val:'3 atm'},{lbl:'T₁',val:'400 K (127°C)'},{lbl:'T₂',val:'200 K (−73°C)'}], hint:'📌 T bajó a la mitad (400→200). P bajará a la mitad: 3÷2 = 1.5 atm.',
+        correct:{labels:['P₂'],values:[1.5],units:['atm'],display:'P₂ = 1.5 atm'},
+        wrong:[{labels:['P₂'],values:[6],units:['atm'],display:'P₂ = 6 atm'},{labels:['P₂'],values:[2],units:['atm'],display:'P₂ = 2 atm'},{labels:['P₂'],values:[1],units:['atm'],display:'P₂ = 1 atm'}],
+        explanation:()=>`P₂ = (3×200)/400 = 600/400 = <strong style="color:#6ee7b7">1.5 atm</strong>. T bajó a la mitad → P bajó a la mitad.`,
+        vizFn:()=>renderGayViz(3,400,200,1.5) },
+      { given:[{lbl:'P₁',val:'2 atm'},{lbl:'T₁',val:'250 K (−23°C)'},{lbl:'T₂',val:'500 K (227°C)'}], hint:'📌 T se duplicó (250→500). P se duplicará: 2×2 = 4 atm.',
+        correct:{labels:['P₂'],values:[4],units:['atm'],display:'P₂ = 4 atm'},
+        wrong:[{labels:['P₂'],values:[3],units:['atm'],display:'P₂ = 3 atm'},{labels:['P₂'],values:[1],units:['atm'],display:'P₂ = 1 atm'},{labels:['P₂'],values:[5],units:['atm'],display:'P₂ = 5 atm'}],
+        explanation:()=>`P₂ = (2×500)/250 = 1000/250 = <strong style="color:#6ee7b7">4 atm</strong>. T se duplicó → P se duplicó.`,
+        vizFn:()=>renderGayViz(2,250,500,4) },
+      { given:[{lbl:'P₁',val:'4 atm'},{lbl:'T₁',val:'300 K (27°C)'},{lbl:'T₂',val:'450 K (177°C)'}], hint:'📌 T aumentó 1.5x (300→450). P también aumentará 1.5x: 4×1.5 = 6 atm.',
+        correct:{labels:['P₂'],values:[6],units:['atm'],display:'P₂ = 6 atm'},
+        wrong:[{labels:['P₂'],values:[8],units:['atm'],display:'P₂ = 8 atm'},{labels:['P₂'],values:[5],units:['atm'],display:'P₂ = 5 atm'},{labels:['P₂'],values:[2.67],units:['atm'],display:'P₂ ≈ 2.67 atm'}],
+        explanation:()=>`P₂ = (4×450)/300 = 1800/300 = <strong style="color:#6ee7b7">6 atm</strong>. T aumentó 1.5x → P aumentó 1.5x.`,
+        vizFn:()=>renderGayViz(4,300,450,6) },
+      { given:[{lbl:'P₁',val:'5 atm'},{lbl:'T₁',val:'500 K (227°C)'},{lbl:'T₂',val:'100 K (−173°C)'}], hint:'📌 T bajó a 1/5 (500→100). P bajará a 1/5: 5÷5 = 1 atm.',
+        correct:{labels:['P₂'],values:[1],units:['atm'],display:'P₂ = 1 atm'},
+        wrong:[{labels:['P₂'],values:[25],units:['atm'],display:'P₂ = 25 atm'},{labels:['P₂'],values:[2],units:['atm'],display:'P₂ = 2 atm'},{labels:['P₂'],values:[0.5],units:['atm'],display:'P₂ = 0.5 atm'}],
+        explanation:()=>`P₂ = (5×100)/500 = 500/500 = <strong style="color:#6ee7b7">1 atm</strong>. T bajó a 1/5 → P bajó a 1/5.`,
+        vizFn:()=>renderGayViz(5,500,100,1) },
+    ]
+  },
+  combined: {
+    name: '⚡ Ley Combinada', color: '#f5a623', colorLight: '#fcd34d',
+    badgeBg: '#f5a62322', badgeBorder: '#f5a62344', formula: '(P₁V₁)/T₁ = (P₂V₂)/T₂',
+    theoryTab: 'combined',
+    challengeTitle: '🎯 Las tres variables cambian',
+    challengeDesc: 'P, V y T cambian entre los dos estados. Usa: <strong>V₂ = (P₁·V₁·T₂) / (T₁·P₂)</strong>. Todos los datos están dados — solo debes calcular.',
+    optsTitle: '🤔 Elige el nuevo volumen V₂', optsDesc: 'Calcula V₂ = (P₁×V₁×T₂) / (T₁×P₂).',
+    vizTitle: '🔬 Visualización — Ley Combinada',
+    rounds: [
+      { given:[{lbl:'P₁',val:'1 atm'},{lbl:'V₁',val:'10 L'},{lbl:'T₁',val:'300 K'},{lbl:'P₂',val:'2 atm'},{lbl:'T₂',val:'400 K'}], hint:'📌 V₂=(1×10×400)/(300×2)=4000/600 ≈ 6.67 L',
+        correct:{labels:['V₂'],values:[6.67],units:['L'],display:'V₂ ≈ 6.67 L'},
+        wrong:[{labels:['V₂'],values:[5],units:['L'],display:'V₂ = 5 L'},{labels:['V₂'],values:[8],units:['L'],display:'V₂ = 8 L'},{labels:['V₂'],values:[13.3],units:['L'],display:'V₂ ≈ 13.3 L'}],
+        explanation:()=>`V₂=(1×10×400)/(300×2)=4000/600=<strong style="color:#fcd34d">6.67 L</strong>. P↑ (V↓) pero T↑ (V↑) — efecto neto: pequeña reducción.`,
+        vizFn:()=>renderCombinedViz(1,10,300,2,6.67,400) },
+      { given:[{lbl:'P₁',val:'2 atm'},{lbl:'V₁',val:'6 L'},{lbl:'T₁',val:'400 K'},{lbl:'P₂',val:'1 atm'},{lbl:'T₂',val:'200 K'}], hint:'📌 V₂=(2×6×200)/(400×1)=2400/400 = 6 L',
+        correct:{labels:['V₂'],values:[6],units:['L'],display:'V₂ = 6 L'},
+        wrong:[{labels:['V₂'],values:[12],units:['L'],display:'V₂ = 12 L'},{labels:['V₂'],values:[3],units:['L'],display:'V₂ = 3 L'},{labels:['V₂'],values:[24],units:['L'],display:'V₂ = 24 L'}],
+        explanation:()=>`V₂=(2×6×200)/(400×1)=2400/400=<strong style="color:#fcd34d">6 L</strong>. P↓ (V↑) y T↓ (V↓) — los efectos se cancelan.`,
+        vizFn:()=>renderCombinedViz(2,6,400,1,6,200) },
+      { given:[{lbl:'P₁',val:'3 atm'},{lbl:'V₁',val:'4 L'},{lbl:'T₁',val:'300 K'},{lbl:'P₂',val:'6 atm'},{lbl:'T₂',val:'600 K'}], hint:'📌 V₂=(3×4×600)/(300×6)=7200/1800 = 4 L',
+        correct:{labels:['V₂'],values:[4],units:['L'],display:'V₂ = 4 L'},
+        wrong:[{labels:['V₂'],values:[2],units:['L'],display:'V₂ = 2 L'},{labels:['V₂'],values:[8],units:['L'],display:'V₂ = 8 L'},{labels:['V₂'],values:[6],units:['L'],display:'V₂ = 6 L'}],
+        explanation:()=>`V₂=(3×4×600)/(300×6)=7200/1800=<strong style="color:#fcd34d">4 L</strong>. P×2 (V÷2) y T×2 (V×2) — ¡los efectos se cancelan!`,
+        vizFn:()=>renderCombinedViz(3,4,300,6,4,600) },
+      { given:[{lbl:'P₁',val:'4 atm'},{lbl:'V₁',val:'5 L'},{lbl:'T₁',val:'500 K'},{lbl:'P₂',val:'2 atm'},{lbl:'T₂',val:'250 K'}], hint:'📌 V₂=(4×5×250)/(500×2)=5000/1000 = 5 L',
+        correct:{labels:['V₂'],values:[5],units:['L'],display:'V₂ = 5 L'},
+        wrong:[{labels:['V₂'],values:[10],units:['L'],display:'V₂ = 10 L'},{labels:['V₂'],values:[2.5],units:['L'],display:'V₂ = 2.5 L'},{labels:['V₂'],values:[20],units:['L'],display:'V₂ = 20 L'}],
+        explanation:()=>`V₂=(4×5×250)/(500×2)=5000/1000=<strong style="color:#fcd34d">5 L</strong>. P÷2 (V×2) y T÷2 (V÷2) — se compensan.`,
+        vizFn:()=>renderCombinedViz(4,5,500,2,5,250) },
+      { given:[{lbl:'P₁',val:'1 atm'},{lbl:'V₁',val:'8 L'},{lbl:'T₁',val:'200 K'},{lbl:'P₂',val:'4 atm'},{lbl:'T₂',val:'400 K'}], hint:'📌 V₂=(1×8×400)/(200×4)=3200/800 = 4 L',
+        correct:{labels:['V₂'],values:[4],units:['L'],display:'V₂ = 4 L'},
+        wrong:[{labels:['V₂'],values:[16],units:['L'],display:'V₂ = 16 L'},{labels:['V₂'],values:[2],units:['L'],display:'V₂ = 2 L'},{labels:['V₂'],values:[6.4],units:['L'],display:'V₂ = 6.4 L'}],
+        explanation:()=>`V₂=(1×8×400)/(200×4)=3200/800=<strong style="color:#fcd34d">4 L</strong>. P×4 (V÷4) y T×2 (V×2) → neto V÷2.`,
+        vizFn:()=>renderCombinedViz(1,8,200,4,4,400) },
+    ]
+  }
+};
+
+function renderBoyleViz(p1,v1,p2,v2){
+  twoBox('cv-game',Math.round(6+p1*2.5),Math.round(6+p2*2.5),'#7c6dff','#4a9eff',`P₁=${p1}atm|V₁=${v1}L`,`P₂=${p2}atm|V₂=${v2}L`,false);
+  document.getElementById('g-viz-desc').textContent=p2>p1?`P subió → gas se comprimió de ${v1}L a ${v2}L.`:`P bajó → gas se expandió de ${v1}L a ${v2}L.`;
+  document.getElementById('g-canvas-cap').textContent=`k=P·V=${p1*v1} en ambos estados. Izq: estado inicial. Der: estado final.`;
+  document.getElementById('g-viz-explanation').innerHTML=`<strong style="color:var(--text)">k = P·V = ${p1*v1} se conserva.</strong><br>${p2>p1?`P↑ ×${(p2/p1).toFixed(1)} → V÷${(p2/p1).toFixed(1)} = ${v2}L`:`P↓ → V×${(p1/p2).toFixed(1)} = ${v2}L`}`;
+}
+function renderCharlesViz(v1,t1,t2,v2){
+  const c1=t1>400?'#ff6584':'#4a9eff',c2=t2>400?'#ff6584':'#4a9eff';
+  twoBox('cv-game',10,10,c1,c2,`V₁=${v1}L|T₁=${t1}K`,`V₂=${v2}L|T₂=${t2}K`,false);
+  document.getElementById('g-viz-desc').textContent=t2>t1?`T↑ (${t1}K→${t2}K) → V se expandió de ${v1}L a ${v2}L.`:`T↓ (${t1}K→${t2}K) → V se contrajo de ${v1}L a ${v2}L.`;
+  document.getElementById('g-canvas-cap').textContent=`V/T=${(v1/t1).toFixed(4)} en ambos estados.`;
+  document.getElementById('g-viz-explanation').innerHTML=`<strong style="color:var(--text)">V₂=(${v1}×${t2})/${t1}=${v2}L</strong><br>${t2>t1?`T↑ → moléculas más rápidas → necesitan más espacio → V↑`:`T↓ → moléculas más lentas → menos espacio → V↓`}`;
+}
+function renderGayViz(p1,t1,t2,p2){
+  const c1=t1>400?'#ff6584':'#4caf9a',c2=t2>400?'#ff6584':'#4caf9a';
+  twoBox('cv-game',Math.round(6+t1/50),Math.round(6+t2/50),c1,c2,`P₁=${p1}atm|T₁=${t1}K`,`P₂=${p2}atm|T₂=${t2}K`,true);
+  document.getElementById('g-viz-desc').textContent=`Recipiente rígido (V fijo). T: ${t1}K→${t2}K → P: ${p1}→${p2} atm.`;
+  document.getElementById('g-canvas-cap').textContent=`Mismo tamaño de recipiente. P/T=${(p1/t1).toFixed(5)} en ambos estados.`;
+  document.getElementById('g-viz-explanation').innerHTML=`<strong style="color:var(--text)">P₂=(${p1}×${t2})/${t1}=${p2}atm</strong><br>${t2>t1?`T↑ → moléculas chocan más fuerte → P↑`:`T↓ → choques más suaves → P↓`}`;
+}
+function renderCombinedViz(p1,v1,t1,p2,v2,t2){
+  twoBox('cv-game',Math.round(6+p1*2),Math.round(6+p2*2),'#f5a623','#4a9eff',`P${p1}|V${v1}|T${t1}`,`P${p2}|V${v2}|T${t2}`,false);
+  document.getElementById('g-viz-desc').textContent=`Las tres variables cambian. V₂=(P₁·V₁·T₂)/(T₁·P₂)=${v2}L.`;
+  document.getElementById('g-canvas-cap').textContent=`(P·V)/T=${(p1*v1/t1).toFixed(4)} en ambos estados.`;
+  document.getElementById('g-viz-explanation').innerHTML=`<strong style="color:var(--text)">V₂=(${p1}×${v1}×${t2})/(${t1}×${p2})=${(p1*v1*t2).toFixed(0)}/${(t1*p2).toFixed(0)}=${v2}L</strong>`;
+}
+
+let currentLaw=null,gRound=0,gScore=0,gCorrect=0,gAnswered=false;
+let gHistory=[];      // stores {round, chosenOpt, wasCorrect} for each answered round
+let gViewingRound=-1; // -1 = current, >=0 = reviewing that round index
+
+function startGameFor(law){
+  currentLaw=law; gRound=0; gScore=0; gCorrect=0; gAnswered=false;
+  gHistory=[]; gViewingRound=-1;
+  const d=GAME_DATA[law];
+  const badge=document.getElementById('g-law-badge');
+  badge.textContent=d.name+' · '+d.formula;
+  badge.style.background=d.badgeBg; badge.style.borderColor=d.badgeBorder; badge.style.color=d.colorLight;
+  document.getElementById('go-theory-btn').onclick=()=>goTab(d.theoryTab);
+  document.getElementById('go-replay-btn').onclick=()=>startGameFor(law);
+  document.getElementById('game-selector').style.display='none';
+  document.getElementById('game-active').style.display='block';
+  document.getElementById('game-over').style.display='none';
+  document.getElementById('g-reset-confirm').style.display='none';
+  document.getElementById('g-review-banner').style.display='none';
+  showRound();
+}
+
+function backToSelector(){
+  document.getElementById('game-selector').style.display='block';
+  document.getElementById('game-active').style.display='none';
+  document.getElementById('game-over').style.display='none';
+}
+function initGame(){ backToSelector(); }
+
+function showRound(reviewIdx){
+  // reviewIdx: if defined, show that past round in read-only mode
+  const isReview = reviewIdx !== undefined;
+  gViewingRound = isReview ? reviewIdx : -1;
+  const roundIdx = isReview ? reviewIdx : gRound;
+  if(!isReview) gAnswered=false;
+
+  const d=GAME_DATA[currentLaw]; const r=d.rounds[roundIdx];
+
+  // Review banner
+  const banner=document.getElementById('g-review-banner');
+  if(isReview){ banner.style.display='flex'; } else { banner.style.display='none'; }
+
+  // Prev button — show if there's a previous answered round
+  const prevBtn=document.getElementById('g-prev-btn');
+  const prevIdx=(isReview?reviewIdx:gRound)-1;
+  prevBtn.style.display=prevIdx>=0&&gHistory[prevIdx]?'':'none';
+
+  // Reset confirm — hide when showing a new round
+  if(!isReview) document.getElementById('g-reset-confirm').style.display='none';
+
+  document.getElementById('g-score').textContent=gScore;
+  document.getElementById('g-round').textContent=isReview?`Ronda ${roundIdx+1} / ${d.rounds.length} (revisión)`:`${roundIdx+1} / ${d.rounds.length}`;
+  document.getElementById('g-correct').textContent=gCorrect;
+  document.getElementById('g-challenge-card').style.borderColor=d.color+'55';
+  document.getElementById('g-challenge-card').style.background=d.color+'08';
+  document.getElementById('g-challenge-title').style.color=d.colorLight;
+  document.getElementById('g-challenge-title').textContent=isReview?`${d.challengeTitle} — Revisión ronda ${roundIdx+1}`:d.challengeTitle;
+  document.getElementById('g-challenge-desc').innerHTML=d.challengeDesc;
+  document.getElementById('g-hint-box').innerHTML=r.hint;
+  document.getElementById('g-hint-box').style.cssText=`background:${d.color}18;border-radius:var(--radius-sm);padding:.65rem .85rem;font-size:.85rem;color:${d.colorLight};border:1px solid ${d.color}33`;
+  document.getElementById('g-given-vals').innerHTML=r.given.map(g=>`<div style="flex:1;min-width:90px;background:var(--surface);border-radius:var(--radius-sm);padding:.7rem;text-align:center;border:1px solid ${d.color}44"><div style="font-size:.7rem;color:${d.colorLight};margin-bottom:.2rem;font-weight:600">${g.lbl}</div><div style="font-size:1.3rem;font-weight:700;color:${d.colorLight}">${g.val}</div></div>`).join('');
+  document.getElementById('g-opts-title').textContent=isReview?`Tu respuesta en ronda ${roundIdx+1}`:d.optsTitle;
+  document.getElementById('g-opts-desc').textContent=isReview?'Puedes revisar la pregunta y la respuesta, pero no cambiarla.':d.optsDesc;
+  document.getElementById('g-feedback').style.display='none';
+  document.getElementById('g-viz-card').style.display='none';
+  document.getElementById('g-next-wrap').style.display='none';
+
+  // In review mode use the exact same shuffled order from history; otherwise shuffle fresh
+  let opts;
+  const hist = gHistory[roundIdx];
+  if(isReview && hist) {
+    opts = hist.shuffledOpts;
+  } else {
+    opts=[{...r.correct,isCorrect:true},...r.wrong.map(w=>({...w,isCorrect:false}))].sort(()=>Math.random()-0.5);
+    // store shuffled order for potential future review
+    if(!isReview){
+      if(!gHistory[roundIdx]) gHistory[roundIdx]={};
+      gHistory[roundIdx].shuffledOpts=opts;
+    }
+  }
+
+  const wrap=document.getElementById('g-options'); wrap.innerHTML='';
+  opts.forEach((opt,i)=>{
+    const div=document.createElement('div'); div.className='g-opt-btn';
+    div.innerHTML=`<div style="font-size:.7rem;color:var(--sub);font-weight:700;margin-bottom:.45rem">OPCIÓN ${String.fromCharCode(65+i)}</div>
+      ${opt.labels.map((lbl,j)=>`<div style="margin-bottom:.25rem"><span style="font-size:.72rem;color:var(--sub)">${lbl} = </span><span style="font-size:1.3rem;font-weight:700;color:var(--text)">${opt.values[j]} ${opt.units[j]}</span></div>`).join('')}
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.35rem">${opt.display}</div>`;
+    if(isReview && hist && hist.chosen){
+      // show the student's previous answer highlighted
+      div.classList.add('disabled');
+      const wasPicked = JSON.stringify(opt.values)===JSON.stringify(hist.chosen.values);
+      if(wasPicked) div.classList.add(hist.wasCorrect?'correct':'wrong');
+      else if(opt.isCorrect && !hist.wasCorrect) div.classList.add('correct');
+    } else {
+      div.onmouseenter=()=>{if(!gAnswered)div.style.borderColor=d.color;};
+      div.onmouseleave=()=>{if(!gAnswered)div.style.borderColor='var(--border)';};
+      div.onclick=()=>pickAnswer(opt,div,r);
+    }
+    wrap.appendChild(div);
+  });
+
+  // If reviewing, also restore feedback and viz
+  if(isReview && hist && hist.chosen){
+    const fb=document.getElementById('g-feedback'); fb.style.display='block';
+    fb.innerHTML=hist.feedbackHTML;
+    document.getElementById('g-viz-title').textContent=d.vizTitle;
+    hist.vizFn();
+    document.getElementById('g-viz-card').style.display='block';
+    // Show nav: back to current round
+    document.getElementById('g-next-wrap').style.display='block';
+    document.getElementById('g-next-btn').textContent='Volver a la ronda actual →';
+    document.getElementById('g-next-btn').onclick=exitReview;
+    const note=document.getElementById('g-review-note');
+    note.textContent=hist.wasCorrect?'✅ Respondiste correctamente':'❌ Respondiste incorrectamente';
+    note.style.color=hist.wasCorrect?'#6ee7b7':'#fca5a5';
+  }
+}
+
+function pickAnswer(opt,div,round){
+  if(gAnswered)return; gAnswered=true;
+  const d=GAME_DATA[currentLaw];
+  document.querySelectorAll('.g-opt-btn').forEach(c=>c.classList.add('disabled'));
+  if(opt.isCorrect){
+    div.classList.add('correct'); gScore+=100; gCorrect++;
+    document.getElementById('g-score').textContent=gScore;
+    document.getElementById('g-correct').textContent=gCorrect;
+  } else {
+    div.classList.add('wrong');
+    document.querySelectorAll('.g-opt-btn').forEach(c=>{
+      if(c!==div){
+        const v=c.querySelector('span[style*="1.3rem"]');
+        if(v&&Math.abs(parseFloat(v.textContent)-round.correct.values[0])<0.05) c.classList.add('correct');
+      }
+    });
+  }
+  const fbHTML=opt.isCorrect
+    ?`<div class="happening" style="background:#4caf9a0f;border-color:#4caf9a55;color:var(--sub)"><div class="happening-title" style="color:#6ee7b7">✅ ¡Correcto! +100 puntos</div>${round.explanation()}</div>`
+    :`<div class="happening" style="background:#ff52520f;border-color:#ff525255;color:var(--sub)"><div class="happening-title" style="color:#fca5a5">❌ No es correcto</div><strong style="color:var(--text)">Respuesta correcta: ${round.correct.display}</strong><br>${round.explanation()}</div>`;
+  const fb=document.getElementById('g-feedback'); fb.style.display='block';
+  fb.innerHTML=fbHTML;
+  document.getElementById('g-viz-title').textContent=d.vizTitle;
+  round.vizFn();
+  document.getElementById('g-viz-card').style.display='block';
+  document.getElementById('g-next-wrap').style.display='block';
+  document.getElementById('g-next-btn').textContent=gRound+1>=d.rounds.length?'Ver resultados 🏆':'Siguiente ronda →';
+  document.getElementById('g-next-btn').onclick=nextRound;
+  // Review note is empty for current round
+  const note=document.getElementById('g-review-note');
+  note.textContent=''; 
+  // Save answer to existing history entry (shuffledOpts was stored in showRound)
+  if(!gHistory[gRound]) gHistory[gRound]={shuffledOpts:[],vizFn:null};
+  gHistory[gRound].chosen=opt;
+  gHistory[gRound].wasCorrect=opt.isCorrect;
+  gHistory[gRound].feedbackHTML=fbHTML;
+  gHistory[gRound].vizFn=round.vizFn;
+  // Prev button: show now that this round is answered and gRound>0 means there's a previous
+  document.getElementById('g-prev-btn').style.display=gRound>0?'':'none';
+}
+
+function nextRound(){
+  // If in review mode, exit review and return to current live round
+  if(gViewingRound>=0){exitReview();return;}
+  gRound++; const d=GAME_DATA[currentLaw];
+  if(gRound>=d.rounds.length){endGame();return;}
+  showRound();
+  document.getElementById('game-active').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function goToPrev(){
+  // Go one round back (review mode)
+  const targetRound = gViewingRound>=0 ? gViewingRound-1 : gRound-1;
+  if(targetRound<0) return;
+  showRound(targetRound);
+  document.getElementById('game-active').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function exitReview(){
+  gViewingRound=-1;
+  // Restore live state
+  document.getElementById('g-review-banner').style.display='none';
+  // Rebuild current live round (already answered or fresh)
+  if(gHistory[gRound]&&gHistory[gRound].chosen){
+    // Round already answered — just re-render current round fully
+    showRound(); // will re-render the live round
+    // Re-fire the answer display since gHistory has the data
+    const d=GAME_DATA[currentLaw]; const r=d.rounds[gRound];
+    const opts=gHistory[gRound].shuffledOpts;
+    const wrap=document.getElementById('g-options'); wrap.innerHTML='';
+    opts.forEach((opt,i)=>{
+      const div=document.createElement('div'); div.className='g-opt-btn disabled';
+      div.innerHTML=`<div style="font-size:.7rem;color:var(--sub);font-weight:700;margin-bottom:.45rem">OPCIÓN ${String.fromCharCode(65+i)}</div>
+        ${opt.labels.map((lbl,j)=>`<div style="margin-bottom:.25rem"><span style="font-size:.72rem;color:var(--sub)">${lbl} = </span><span style="font-size:1.3rem;font-weight:700;color:var(--text)">${opt.values[j]} ${opt.units[j]}</span></div>`).join('')}
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.35rem">${opt.display}</div>`;
+      const wasPicked=JSON.stringify(opt.values)===JSON.stringify(gHistory[gRound].chosen.values);
+      if(wasPicked) div.classList.add(gHistory[gRound].wasCorrect?'correct':'wrong');
+      else if(opt.isCorrect&&!gHistory[gRound].wasCorrect) div.classList.add('correct');
+      wrap.appendChild(div);
+    });
+    document.getElementById('g-feedback').style.display='block';
+    document.getElementById('g-feedback').innerHTML=gHistory[gRound].feedbackHTML;
+    document.getElementById('g-viz-title').textContent=d.vizTitle;
+    gHistory[gRound].vizFn();
+    document.getElementById('g-viz-card').style.display='block';
+    document.getElementById('g-next-wrap').style.display='block';
+    document.getElementById('g-next-btn').textContent=gRound+1>=d.rounds.length?'Ver resultados 🏆':'Siguiente ronda →';
+    document.getElementById('g-next-btn').onclick=nextRound;
+    document.getElementById('g-review-note').textContent='';
+    document.getElementById('g-prev-btn').style.display=gRound>0?'':'none';
+  } else {
+    showRound(); // Fresh unanswered round
+  }
+  document.getElementById('game-active').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function confirmReset(){
+  document.getElementById('g-reset-confirm').style.display='block';
+  document.getElementById('g-reset-confirm').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function cancelReset(){
+  document.getElementById('g-reset-confirm').style.display='none';
+}
+function doReset(){
+  document.getElementById('g-reset-confirm').style.display='none';
+  startGameFor(currentLaw);
+}
+
+function replayGame(){startGameFor(currentLaw);}
+
+function endGame(){
+  document.getElementById('game-active').style.display='none';
+  document.getElementById('game-over').style.display='block';
+  const d=GAME_DATA[currentLaw]; const total=d.rounds.length;
+  const pct=Math.round(gCorrect/total*100);
+  const emoji=pct>=80?'🏆':pct>=60?'🌟':pct>=40?'👍':'📖';
+  const lawName={boyle:'Boyle',charles:'Charles',gay:'Gay-Lussac',combined:'la Ley Combinada'}[currentLaw];
+  const msg=pct>=80?`¡Excelente! Dominaste ${lawName}. ${gCorrect}/${total} correctas.`
+    :pct>=60?`¡Muy bien! ${gCorrect}/${total}. Un poco más de práctica y lo tendrás.`
+    :pct>=40?`${gCorrect}/${total}. Repasa la teoría de ${lawName} y vuelve a intentarlo.`
+    :`${gCorrect}/${total}. Revisa la sección teórica antes de reintentar.`;
+  document.getElementById('go-emoji').textContent=emoji;
+  document.getElementById('go-score').textContent=gScore;
+  document.getElementById('go-msg').textContent=msg;
+}
+
+/* ════ Init ════ */
+calcBoyle();
+setTimeout(()=>{drawBoyleGraph();},80);
+</script>
+</body>
+</html>
